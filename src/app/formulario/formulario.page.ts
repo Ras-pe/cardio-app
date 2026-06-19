@@ -8,6 +8,46 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class FormularioPage implements OnInit {
   form: FormGroup;
+  mostrarConfirmacion = false;
+
+  confirmacionSections = [
+    {
+      title: 'Variables Actuales',
+      icon: 'pulse-outline',
+      color: 'primary',
+      fields: ['edad', 'sexo', 'presion_arterial', 'colesterol', 'fc_maxima', 'tipo_dolor_pecho'],
+    },
+    {
+      title: 'Datos Antropométricos',
+      icon: 'body-outline',
+      color: 'secondary',
+      fields: ['peso', 'estatura', 'imc', 'circunferencia_cintura', 'relacion_cintura_estatura'],
+    },
+    {
+      title: 'Antecedentes Médicos',
+      icon: 'medkit-outline',
+      color: 'tertiary',
+      fields: ['diabetes', 'hipertension', 'antecedentes_familiares', 'enfermedad_renal', 'medicamentos_actuales'],
+    },
+    {
+      title: 'Hábitos de Vida',
+      icon: 'leaf-outline',
+      color: 'success',
+      fields: ['tabaquismo', 'consumo_alcohol', 'actividad_fisica', 'horas_sueno', 'nivel_estres'],
+    },
+    {
+      title: 'Estudios Clínicos',
+      icon: 'flask-outline',
+      color: 'danger',
+      fields: ['glucosa_sangre', 'trigliceridos', 'hdl', 'ldl', 'saturacion_oxigeno'],
+    },
+    {
+      title: 'Signos Vitales',
+      icon: 'fitness-outline',
+      color: 'primary',
+      fields: ['frecuencia_respiratoria', 'temperatura_corporal', 'presion_sistolica', 'presion_diastolica'],
+    },
+  ];
 
   sexos = [
     { value: 'masculino', label: 'Masculino' },
@@ -116,8 +156,70 @@ export class FormularioPage implements OnInit {
   }
 
   onSubmit() {
-    if (this.form.valid) {
-      console.log('Formulario enviado:', this.form.value);
+    if (this.form.invalid) return;
+
+    if (!this.mostrarConfirmacion) {
+      this.mostrarConfirmacion = true;
+      return;
     }
+
+    console.log('Formulario enviado:', this.form.value);
+    this.mostrarConfirmacion = false;
+  }
+
+  volverAlFormulario() {
+    this.mostrarConfirmacion = false;
+  }
+
+  getLabel(prop: string): string {
+    const labels: Record<string, string> = {
+      edad: 'Edad',
+      sexo: 'Sexo',
+      presion_arterial: 'Presión Arterial',
+      colesterol: 'Colesterol',
+      fc_maxima: 'Frecuencia Cardíaca Máxima',
+      tipo_dolor_pecho: 'Tipo de Dolor en el Pecho',
+      peso: 'Peso',
+      estatura: 'Estatura',
+      imc: 'IMC',
+      circunferencia_cintura: 'Circunferencia de Cintura',
+      relacion_cintura_estatura: 'Relación Cintura-Estatura',
+      diabetes: 'Diabetes',
+      hipertension: 'Hipertensión',
+      antecedentes_familiares: 'Antecedentes familiares',
+      enfermedad_renal: 'Enfermedad renal',
+      medicamentos_actuales: 'Medicamentos actuales',
+      tabaquismo: 'Tabaquismo',
+      consumo_alcohol: 'Consumo de alcohol',
+      actividad_fisica: 'Actividad física',
+      horas_sueno: 'Horas de sueño',
+      nivel_estres: 'Nivel de estrés',
+      glucosa_sangre: 'Glucosa en sangre',
+      trigliceridos: 'Triglicéridos',
+      hdl: 'HDL',
+      ldl: 'LDL',
+      saturacion_oxigeno: 'Saturación de Oxígeno',
+      frecuencia_respiratoria: 'Frecuencia Respiratoria',
+      temperatura_corporal: 'Temperatura Corporal',
+      presion_sistolica: 'Presión Sistólica',
+      presion_diastolica: 'Presión Diastólica',
+    };
+    return labels[prop] || prop;
+  }
+
+  formatValue(value: any, prop: string): string {
+    if (value === '' || value === null || value === undefined) return '—';
+
+    const selectLabels: Record<string, Record<string, string>> = {
+      sexo: { masculino: 'Masculino', femenino: 'Femenino' },
+      tipo_dolor_pecho: { tipica: 'Angina típica', atipica: 'Angina atípica', no_anginal: 'Dolor no anginal', asintomatico: 'Asintomático' },
+      consumo_alcohol: { nunca: 'Nunca', ocasional: 'Ocasional', moderado: 'Moderado', frecuente: 'Frecuente' },
+      actividad_fisica: { sedentario: 'Sedentario', ligero: 'Ligero', moderado: 'Moderado', activo: 'Activo', intenso: 'Muy intenso' },
+      nivel_estres: { bajo: 'Bajo', moderado: 'Moderado', alto: 'Alto', muy_alto: 'Muy alto' },
+    };
+
+    if (typeof value === 'boolean') return value ? 'Sí' : 'No';
+    if (selectLabels[prop]?.[value]) return selectLabels[prop][value];
+    return String(value);
   }
 }

@@ -80,3 +80,98 @@ ion-toggle {
   font-size: 16px;
   margin-top: 8px;
 }
+
+.confirmacion-section {
+  margin-top: 16px;
+}
+
+.confirmacion-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding: 12px 16px;
+  background: var(--cardio-card-bg);
+  border-radius: 12px;
+  border: 1px solid var(--cardio-border);
+
+  ion-icon {
+    font-size: 24px;
+  }
+
+  span {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--cardio-text);
+  }
+}
+
+.confirmacion-card {
+  background: var(--cardio-card-bg);
+  border-radius: 12px;
+  border: 1px solid var(--cardio-border);
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.confirmacion-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: var(--cardio-bg);
+  border-bottom: 1px solid var(--cardio-border);
+
+  ion-icon {
+    font-size: 18px;
+  }
+
+  span {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--cardio-text);
+  }
+}
+
+.confirmacion-card-body {
+  padding: 8px 16px;
+}
+
+.confirmacion-field {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--cardio-border);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.confirmacion-field-label {
+  font-size: 13px;
+  color: var(--cardio-text-light);
+}
+
+.confirmacion-field-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--cardio-text);
+  text-align: right;
+  max-width: 55%;
+}
+
+.confirmacion-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.back-btn {
+  --border-radius: 12px;
+  height: 48px;
+  font-weight: 600;
+  font-size: 15px;
+}

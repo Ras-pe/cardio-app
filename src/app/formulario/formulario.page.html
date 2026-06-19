@@ -273,10 +273,45 @@
       </div>
     </div>
 
-    <ion-button type="submit" expand="block" class="submit-btn" [disabled]="form.invalid">
-      <ion-icon slot="start" name="checkmark-circle-outline"></ion-icon>
-      Calcular Evaluación
-    </ion-button>
+    <ng-container *ngIf="!mostrarConfirmacion; else confirmacion">
+      <ion-button type="submit" expand="block" class="submit-btn" [disabled]="form.invalid">
+        <ion-icon slot="start" name="checkmark-circle-outline"></ion-icon>
+        Calcular Evaluación
+      </ion-button>
+    </ng-container>
+
+    <ng-template #confirmacion>
+      <div class="confirmacion-section">
+        <div class="confirmacion-header">
+          <ion-icon name="clipboard-outline" color="primary"></ion-icon>
+          <span>Revisá tus datos antes de confirmar</span>
+        </div>
+
+        <div class="confirmacion-card" *ngFor="let section of confirmacionSections">
+          <div class="confirmacion-card-header">
+            <ion-icon [name]="section.icon" [color]="section.color"></ion-icon>
+            <span>{{ section.title }}</span>
+          </div>
+          <div class="confirmacion-card-body">
+            <div class="confirmacion-field" *ngFor="let field of section.fields">
+              <span class="confirmacion-field-label">{{ getLabel(field) }}</span>
+              <span class="confirmacion-field-value">{{ formatValue(form.get(field)?.value, field) }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="confirmacion-actions">
+          <ion-button expand="block" fill="outline" class="back-btn" (click)="volverAlFormulario()">
+            <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
+            Volver al formulario
+          </ion-button>
+          <ion-button type="submit" expand="block" class="submit-btn">
+            <ion-icon slot="start" name="checkmark-circle-outline"></ion-icon>
+            Confirmar y Enviar
+          </ion-button>
+        </div>
+      </div>
+    </ng-template>
 
   </form>
 </ion-content>
