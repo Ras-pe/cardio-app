@@ -1,0 +1,76 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>CardioApp</ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/perfil">
+        <ion-icon slot="icon-only" name="person-circle-outline"></ion-icon>
+      </ion-button>
+      <ion-button (click)="logout()">
+        <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="welcome-section">
+    <h1>Evaluación Cardiovascular</h1>
+    <p>Bienvenido, {{ userEmail }}</p>
+  </div>
+
+  <div class="risk-card cardio-card">
+    <div class="risk-gauge">
+      <div class="gauge-ring">
+        <svg viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="54" fill="none" stroke="var(--cardio-border)" stroke-width="8"/>
+          <circle cx="60" cy="60" r="54" fill="none" stroke="var(--cardio-accent)" stroke-width="8"
+            stroke-dasharray="339.292" stroke-dashoffset="94.9" stroke-linecap="round"
+            transform="rotate(-90 60 60)"/>
+        </svg>
+        <div class="gauge-center">
+          <span class="gauge-value">{{ riskScore }}%</span>
+          <span class="gauge-label">Riesgo</span>
+        </div>
+      </div>
+      <div class="risk-info">
+        <span class="risk-badge" [style.background]="'var(--ion-color-' + riskColor + ')'">
+          {{ riskLevel }}
+        </span>
+        <p>Completa tus datos para ver el cálculo completo</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">Resumen Rápido</div>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="6" *ngFor="let stat of quickStats">
+        <div class="cardio-card cardio-stat">
+          <ion-icon [name]="stat.icon" [color]="stat.color"></ion-icon>
+          <div class="value">{{ stat.value }}</div>
+          <div class="label">{{ stat.label }}</div>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <div class="section-title">Acciones</div>
+  <div class="action-buttons">
+    <ion-button expand="block" routerLink="/formulario" class="action-btn">
+      <ion-icon slot="start" name="clipboard-outline"></ion-icon>
+      Nueva Evaluación
+    </ion-button>
+    <ion-button expand="block" fill="outline" class="action-btn" routerLink="/historial">
+      <ion-icon slot="start" name="time-outline"></ion-icon>
+      Historial
+    </ion-button>
+  </div>
+
+  <div class="info-card cardio-card">
+    <div class="info-header">
+      <ion-icon name="information-circle-outline" color="primary"></ion-icon>
+      <span>¿Cómo se calcula?</span>
+    </div>
+    <p>Esta evaluación usa factores como edad, presión arterial, colesterol, hábitos y antecedentes para estimar el riesgo de enfermedad cardiovascular a 10 años según escalas validadas.</p>
+  </div>
+</ion-content>

@@ -1,0 +1,40 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Mi Perfil</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="profile-header">
+    <div class="avatar">
+      <ion-icon name="person-circle-outline"></ion-icon>
+    </div>
+    <h1>Bienvenido</h1>
+    <p>Tu información de sesión</p>
+  </div>
+
+  <div class="cardio-card profile-card">
+    <div class="profile-item">
+      <span class="profile-label">Correo electrónico</span>
+      <span class="profile-value">{{ userEmail }}</span>
+    </div>
+  </div>
+
+  <div class="profile-actions">
+    <ion-button expand="block" class="action-btn" routerLink="/historial">
+      <ion-icon slot="start" name="time-outline"></ion-icon>
+      Ver Historial
+    </ion-button>
+    <ion-button expand="block" class="action-btn" routerLink="/home" fill="outline">
+      <ion-icon slot="start" name="home-outline"></ion-icon>
+      Ir al Inicio
+    </ion-button>
+    <ion-button expand="block" class="action-btn logout-btn" (click)="logout()" fill="outline" color="danger">
+      <ion-icon slot="start" name="log-out-outline"></ion-icon>
+      Cerrar Sesión
+    </ion-button>
+  </div>
+</ion-content>

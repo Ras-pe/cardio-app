@@ -1,0 +1,72 @@
+@import '@ionic/angular/css/core.css';
+@import '@ionic/angular/css/normalize.css';
+@import '@ionic/angular/css/structure.css';
+@import '@ionic/angular/css/typography.css';
+@import '@ionic/angular/css/display.css';
+@import '@ionic/angular/css/padding.css';
+@import '@ionic/angular/css/float-elements.css';
+@import '@ionic/angular/css/text-alignment.css';
+@import '@ionic/angular/css/text-transformation.css';
+@import '@ionic/angular/css/flex-utils.css';
+
+:root {
+  --cardio-primary: #2563eb;
+  --cardio-secondary: #0891b2;
+  --cardio-accent: #f59e0b;
+  --cardio-danger: #dc2626;
+  --cardio-success: #16a34a;
+  --cardio-bg: #f0f4f8;
+  --cardio-card-bg: #ffffff;
+  --cardio-text: #1e293b;
+  --cardio-text-light: #64748b;
+  --cardio-border: #e2e8f0;
+  --cardio-gradient-start: #2563eb;
+  --cardio-gradient-end: #0891b2;
+}
+
+ion-content {
+  --background: var(--cardio-bg);
+}
+
+ion-toolbar {
+  --background: linear-gradient(135deg, var(--cardio-gradient-start), var(--cardio-gradient-end));
+  --color: white;
+}
+
+.cardio-card {
+  background: var(--cardio-card-bg);
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.cardio-stat {
+  text-align: center;
+  padding: 20px 16px;
+}
+
+.cardio-stat ion-icon {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.cardio-stat .value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--cardio-text);
+}
+
+.cardio-stat .label {
+  font-size: 13px;
+  color: var(--cardio-text-light);
+  margin-top: 4px;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--cardio-text);
+  margin: 24px 0 12px;
+  padding: 0 4px;
+}

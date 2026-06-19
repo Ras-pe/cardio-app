@@ -1,0 +1,114 @@
+.welcome-section {
+  padding: 24px 20px 8px;
+
+  h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--cardio-text);
+    margin: 0 0 6px;
+  }
+
+  p {
+    font-size: 14px;
+    color: var(--cardio-text-light);
+    margin: 0;
+  }
+}
+
+.form-content {
+  padding: 16px;
+}
+
+.field-group {
+  margin-bottom: 20px;
+
+  .field-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--cardio-text);
+    margin-bottom: 6px;
+    padding: 0 4px;
+  }
+
+  ion-item {
+    --border-radius: 12px;
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --inner-padding-end: 0;
+    --background: var(--cardio-card-bg);
+    border-radius: 12px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  }
+}
+
+.submit-btn {
+  margin-top: 24px;
+  --border-radius: 12px;
+  height: 50px;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.confirm-card {
+  margin: 16px;
+  padding: 20px;
+}
+
+.confirm-item {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--cardio-border);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.confirm-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cardio-text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.confirm-value {
+  display: block;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--cardio-text);
+}
+
+.action-buttons {
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.action-btn {
+  --border-radius: 12px;
+  height: 50px;
+  font-weight: 600;
+  font-size: 15px;
+  margin: 0;
+}
+
+.error-msg p {
+  font-size: 14px;
+  margin: 0 0 8px;
+  text-align: center;
+}
+
+.hint {
+  text-align: center;
+  padding: 24px 16px;
+
+  p {
+    font-size: 13px;
+    color: var(--cardio-text-light);
+    margin: 0;
+  }
+}

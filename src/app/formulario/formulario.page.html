@@ -1,0 +1,282 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Evaluación</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-content">
+
+    <!-- Variables Actuales -->
+    <div class="form-section">
+      <div class="form-section-header">
+        <ion-icon name="pulse-outline" color="primary"></ion-icon>
+        <span>Variables Actuales</span>
+      </div>
+
+      <div class="field-group">
+        <span class="field-label">Edad</span>
+        <ion-item>
+          <ion-input type="number" formControlName="edad" placeholder="Años" min="1" max="120"></ion-input>
+        </ion-item>
+      </div>
+
+      <div class="field-group">
+        <span class="field-label">Sexo</span>
+        <ion-item>
+          <ion-select formControlName="sexo" placeholder="Seleccionar">
+            <ion-select-option *ngFor="let s of sexos" [value]="s.value">{{ s.label }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </div>
+
+      <div class="field-group">
+        <span class="field-label">Presión Arterial (mmHg)</span>
+        <ion-item>
+          <ion-input type="number" formControlName="presion_arterial" placeholder="Ej: 120"></ion-input>
+        </ion-item>
+      </div>
+
+      <div class="field-group">
+        <span class="field-label">Colesterol (mg/dL)</span>
+        <ion-item>
+          <ion-input type="number" formControlName="colesterol" placeholder="Ej: 200"></ion-input>
+        </ion-item>
+      </div>
+
+      <div class="field-group">
+        <span class="field-label">Frecuencia Cardíaca Máxima</span>
+        <ion-item>
+          <ion-input type="number" formControlName="fc_maxima" placeholder="Ej: 180 bpm"></ion-input>
+        </ion-item>
+      </div>
+
+      <div class="field-group">
+        <span class="field-label">Tipo de Dolor en el Pecho</span>
+        <ion-item>
+          <ion-select formControlName="tipo_dolor_pecho" placeholder="Seleccionar">
+            <ion-select-option *ngFor="let d of tipoDolor" [value]="d.value">{{ d.label }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </div>
+    </div>
+
+    <!-- Datos Antropométricos -->
+    <div class="form-section">
+      <div class="form-section-header">
+        <ion-icon name="body-outline" color="secondary"></ion-icon>
+        <span>Datos Antropométricos</span>
+      </div>
+
+      <div class="field-group">
+        <span class="field-label">Peso (kg)</span>
+        <ion-item>
+          <ion-input type="number" formControlName="peso" placeholder="Ej: 70"></ion-input>
+        </ion-item>
+      </div>
+
+      <div class="field-group">
+        <span class="field-label">Estatura (cm)</span>
+        <ion-item>
+          <ion-input type="number" formControlName="estatura" placeholder="Ej: 170"></ion-input>
+        </ion-item>
+      </div>
+
+      <div class="field-group">
+        <span class="field-label">Índice de Masa Corporal (IMC)</span>
+        <ion-item>
+          <ion-input type="text" formControlName="imc" placeholder="Se calcula automáticamente" readonly></ion-input>
+        </ion-item>
+        <span class="field-hint">Se calcula automáticamente con peso y estatura</span>
+      </div>
+
+      <div class="field-group">
+        <span class="field-label">Circunferencia de Cintura (cm)</span>
+        <ion-item>
+          <ion-input type="number" formControlName="circunferencia_cintura" placeholder="Ej: 85"></ion-input>
+        </ion-item>
+      </div>
+
+      <div class="field-group">
+        <span class="field-label">Relación Cintura-Estatura</span>
+        <ion-item>
+          <ion-input type="text" formControlName="relacion_cintura_estatura" placeholder="Se calcula automáticamente" readonly></ion-input>
+        </ion-item>
+        <span class="field-hint">Se calcula automáticamente con cintura y estatura</span>
+      </div>
+    </div>
+
+    <!-- Antecedentes Médicos -->
+    <div class="form-section">
+      <div class="form-section-header">
+        <ion-icon name="medkit-outline" color="tertiary"></ion-icon>
+        <span>Antecedentes Médicos</span>
+      </div>
+
+      <ion-item>
+        <ion-label>Diabetes</ion-label>
+        <ion-toggle formControlName="diabetes"></ion-toggle>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Hipertensión</ion-label>
+        <ion-toggle formControlName="hipertension"></ion-toggle>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Antecedentes familiares de enfermedad cardíaca</ion-label>
+        <ion-toggle formControlName="antecedentes_familiares"></ion-toggle>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Enfermedad renal</ion-label>
+        <ion-toggle formControlName="enfermedad_renal"></ion-toggle>
+      </ion-item>
+
+      <div class="field-group">
+        <span class="field-label">Medicamentos actuales</span>
+        <ion-item>
+          <ion-textarea formControlName="medicamentos_actuales" placeholder="Describe los medicamentos que tomas..."></ion-textarea>
+        </ion-item>
+      </div>
+    </div>
+
+    <!-- Hábitos de Vida -->
+    <div class="form-section">
+      <div class="form-section-header">
+        <ion-icon name="leaf-outline" color="success"></ion-icon>
+        <span>Hábitos de Vida</span>
+      </div>
+
+      <ion-item>
+        <ion-label>Tabaquismo</ion-label>
+        <ion-toggle formControlName="tabaquismo"></ion-toggle>
+      </ion-item>
+
+      <div class="field-group">
+        <span class="field-label">Consumo de alcohol</span>
+        <ion-item>
+          <ion-select formControlName="consumo_alcohol" placeholder="Seleccionar frecuencia">
+            <ion-select-option value="nunca">Nunca</ion-select-option>
+            <ion-select-option value="ocasional">Ocasional</ion-select-option>
+            <ion-select-option value="moderado">Moderado</ion-select-option>
+            <ion-select-option value="frecuente">Frecuente</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </div>
+
+      <div class="field-group">
+        <span class="field-label">Nivel de actividad física</span>
+        <ion-item>
+          <ion-select formControlName="actividad_fisica" placeholder="Seleccionar">
+            <ion-select-option *ngFor="let a of nivelesActividad" [value]="a.value">{{ a.label }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </div>
+
+      <div class="field-group">
+        <span class="field-label">Horas de sueño</span>
+        <ion-item>
+          <ion-input type="number" formControlName="horas_sueno" placeholder="Ej: 7"></ion-input>
+        </ion-item>
+      </div>
+
+      <div class="field-group">
+        <span class="field-label">Nivel de estrés</span>
+        <ion-item>
+          <ion-select formControlName="nivel_estres" placeholder="Seleccionar">
+            <ion-select-option *ngFor="let e of nivelesEstres" [value]="e.value">{{ e.label }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </div>
+    </div>
+
+    <!-- Estudios Clínicos -->
+    <div class="form-section">
+      <div class="form-section-header">
+        <ion-icon name="flask-outline" color="danger"></ion-icon>
+        <span>Estudios Clínicos</span>
+      </div>
+
+      <div class="field-group">
+        <span class="field-label">Glucosa en sangre (mg/dL)</span>
+        <ion-item>
+          <ion-input type="number" formControlName="glucosa_sangre" placeholder="Ej: 95"></ion-input>
+        </ion-item>
+      </div>
+
+      <div class="field-group">
+        <span class="field-label">Triglicéridos (mg/dL)</span>
+        <ion-item>
+          <ion-input type="number" formControlName="trigliceridos" placeholder="Ej: 150"></ion-input>
+        </ion-item>
+      </div>
+
+      <div class="field-group">
+        <span class="field-label">HDL - Colesterol bueno (mg/dL)</span>
+        <ion-item>
+          <ion-input type="number" formControlName="hdl" placeholder="Ej: 50"></ion-input>
+        </ion-item>
+      </div>
+
+      <div class="field-group">
+        <span class="field-label">LDL - Colesterol malo (mg/dL)</span>
+        <ion-item>
+          <ion-input type="number" formControlName="ldl" placeholder="Ej: 100"></ion-input>
+        </ion-item>
+      </div>
+
+      <div class="field-group">
+        <span class="field-label">Saturación de Oxígeno (%)</span>
+        <ion-item>
+          <ion-input type="number" formControlName="saturacion_oxigeno" placeholder="Ej: 98" min="0" max="100"></ion-input>
+        </ion-item>
+      </div>
+    </div>
+
+    <!-- Signos Vitales -->
+    <div class="form-section">
+      <div class="form-section-header">
+        <ion-icon name="fitness-outline" color="primary"></ion-icon>
+        <span>Signos Vitales</span>
+      </div>
+
+      <div class="field-group">
+        <span class="field-label">Frecuencia Respiratoria (resp/min)</span>
+        <ion-item>
+          <ion-input type="number" formControlName="frecuencia_respiratoria" placeholder="Ej: 16"></ion-input>
+        </ion-item>
+      </div>
+
+      <div class="field-group">
+        <span class="field-label">Temperatura Corporal (°C)</span>
+        <ion-item>
+          <ion-input type="number" formControlName="temperatura_corporal" placeholder="Ej: 36.5"></ion-input>
+        </ion-item>
+      </div>
+
+      <div class="field-group">
+        <span class="field-label">Presión Arterial Sistólica (mmHg)</span>
+        <ion-item>
+          <ion-input type="number" formControlName="presion_sistolica" placeholder="Ej: 120"></ion-input>
+        </ion-item>
+      </div>
+
+      <div class="field-group">
+        <span class="field-label">Presión Arterial Diastólica (mmHg)</span>
+        <ion-item>
+          <ion-input type="number" formControlName="presion_diastolica" placeholder="Ej: 80"></ion-input>
+        </ion-item>
+      </div>
+    </div>
+
+    <ion-button type="submit" expand="block" class="submit-btn" [disabled]="form.invalid">
+      <ion-icon slot="start" name="checkmark-circle-outline"></ion-icon>
+      Calcular Evaluación
+    </ion-button>
+
+  </form>
+</ion-content>

@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Historial</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="header-section">
+    <h1>Historial de Actividad</h1>
+    <p>Registro de tus actividades recientes</p>
+  </div>
+
+  <div class="timeline" *ngIf="records.length > 0">
+    <div class="timeline-item" *ngFor="let record of records">
+      <div class="timeline-dot"></div>
+      <div class="cardio-card timeline-card">
+        <div class="timeline-header">
+          <span class="timeline-badge" [class]="'badge-' + record.tipo.toLowerCase()">{{ record.tipo }}</span>
+          <span class="timeline-date">{{ record.fecha }}</span>
+        </div>
+        <p class="timeline-desc">{{ record.descripcion }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="records.length === 0">
+    <ion-icon name="document-text-outline"></ion-icon>
+    <h2>Sin registros</h2>
+    <p>Aún no hay actividad registrada</p>
+  </div>
+</ion-content>

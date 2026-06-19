@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Iniciar Sesión</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="welcome-section">
+    <h1>Bienvenido</h1>
+    <p>Ingresa tus credenciales para continuar</p>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-content">
+    <div class="field-group">
+      <span class="field-label">Correo electrónico</span>
+      <ion-item>
+        <ion-input type="email" formControlName="email" placeholder="ejemplo@correo.com"></ion-input>
+      </ion-item>
+    </div>
+
+    <div class="field-group">
+      <span class="field-label">Contraseña</span>
+      <ion-item>
+        <ion-input type="password" formControlName="password" placeholder="••••••"></ion-input>
+      </ion-item>
+    </div>
+
+    <ion-text color="danger" class="error-msg" *ngIf="error">
+      <p>{{ error }}</p>
+    </ion-text>
+
+    <ion-button type="submit" expand="block" class="submit-btn" [disabled]="form.invalid">
+      <ion-icon slot="start" name="log-in-outline"></ion-icon>
+      Ingresar
+    </ion-button>
+  </form>
+
+  <div class="hint">
+    <p>Demo: <strong>admin&#64;test.com</strong> / <strong>123456</strong></p>
+  </div>
+</ion-content>
