@@ -31,6 +31,26 @@ const routes: Routes = [
     path: 'historial',
     loadChildren: () => import('./historial/historial.module').then(m => m.HistorialPageModule),
     canActivate: [AuthGuard]
+  },
+  {
+    path: 'productos',
+    loadChildren: () => import('./productos/productos.module').then(m => m.ProductosPageModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'productos/nuevo',
+    loadChildren: () => import('./productos/producto-detail.module').then(m => m.ProductoDetailPageModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'productos/:id',
+    loadChildren: () => import('./productos/producto-detail.module').then(m => m.ProductoDetailPageModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'productos/:id/editar',
+    loadChildren: () => import('./productos/producto-detail.module').then(m => m.ProductoDetailPageModule),
+    canActivate: [AuthGuard]
   }
 ];
 

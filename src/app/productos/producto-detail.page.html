@@ -1,0 +1,110 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/productos"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ pageTitle }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="loading-state" *ngIf="loading">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Cargando producto...</p>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-content" *ngIf="!loading">
+    <div class="form-section">
+      <div class="form-section-header">
+        <ion-icon name="cube-outline" color="primary"></ion-icon>
+        <span>Información del Producto</span>
+      </div>
+
+      <div class="field-group">
+        <span class="field-label">Nombre *</span>
+        <ion-item [class.field-error]="nombreControl?.invalid && nombreControl?.touched">
+          <ion-input
+            type="text"
+            formControlName="nombre"
+            placeholder="Nombre del producto"
+          ></ion-input>
+        </ion-item>
+        <ion-text color="danger" *ngIf="nombreControl?.invalid && nombreControl?.touched" class="validation-msg">
+          <span *ngIf="nombreControl?.errors?.['required']">El nombre es obligatorio.</span>
+          <span *ngIf="nombreControl?.errors?.['maxlength']">Máximo 100 caracteres.</span>
+        </ion-text>
+      </div>
+
+      <div class="field-group">
+        <span class="field-label">Descripción</span>
+        <ion-item>
+          <ion-textarea
+            formControlName="descripcion"
+            placeholder="Descripción del producto (opcional)"
+            rows="3"
+          ></ion-textarea>
+        </ion-item>
+        <ion-text color="danger" *ngIf="descripcionControl?.invalid && descripcionControl?.touched" class="validation-msg">
+          <span *ngIf="descripcionControl?.errors?.['maxlength']">Máximo 500 caracteres.</span>
+        </ion-text>
+      </div>
+
+      <div class="field-row">
+        <div class="field-group field-half">
+          <span class="field-label">Precio *</span>
+          <ion-item [class.field-error]="precioControl?.invalid && precioControl?.touched">
+            <ion-input
+              type="number"
+              formControlName="precio"
+              placeholder="0.00"
+              min="0.01"
+              step="0.01"
+            ></ion-input>
+          </ion-item>
+          <ion-text color="danger" *ngIf="precioControl?.invalid && precioControl?.touched" class="validation-msg">
+            <span *ngIf="precioControl?.errors?.['required']">El precio es obligatorio.</span>
+            <span *ngIf="precioControl?.errors?.['min']">Debe ser mayor a $0.</span>
+          </ion-text>
+        </div>
+
+        <div class="field-group field-half">
+          <span class="field-label">Stock *</span>
+          <ion-item [class.field-error]="stockControl?.invalid && stockControl?.touched">
+            <ion-input
+              type="number"
+              formControlName="stock"
+              placeholder="0"
+              min="0"
+            ></ion-input>
+          </ion-item>
+          <ion-text color="danger" *ngIf="stockControl?.invalid && stockControl?.touched" class="validation-msg">
+            <span *ngIf="stockControl?.errors?.['required']">El stock es obligatorio.</span>
+            <span *ngIf="stockControl?.errors?.['min']">No puede ser negativo.</span>
+          </ion-text>
+        </div>
+      </div>
+    </div>
+
+    <div class="action-buttons">
+      <ion-button type="submit" expand="block" class="action-btn" [disabled]="form.invalid || saving">
+        <ion-spinner *ngIf="saving" name="crescent" class="btn-spinner"></ion-spinner>
+        <ng-container *ngIf="!saving">
+          <ion-icon slot="start" name="checkmark-circle-outline"></ion-icon>
+          {{ isEdit ? 'Guardar Cambios' : 'Crear Producto' }}
+        </ng-container>
+      </ion-button>
+
+      <ion-button
+        *ngIf="isEdit"
+        expand="block"
+        fill="outline"
+        color="danger"
+        class="action-btn"
+        (click)="onDelete()"
+      >
+        <ion-icon slot="start" name="trash-outline"></ion-icon>
+        Eliminar Producto
+      </ion-button>
+    </div>
+  </form>
+</ion-content>

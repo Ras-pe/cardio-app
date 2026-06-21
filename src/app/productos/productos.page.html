@@ -1,0 +1,63 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Productos</ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/productos/nuevo">
+        <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="header-section">
+    <h1>Gestión de Productos</h1>
+    <p>Administra el catálogo de productos médicos</p>
+  </div>
+
+  <div class="empty-state" *ngIf="!loading && productos.length === 0">
+    <ion-icon name="cube-outline"></ion-icon>
+    <h2>Sin productos</h2>
+    <p>Agrega tu primer producto tocando el botón +</p>
+    <ion-button routerLink="/productos/nuevo" class="add-btn">
+      <ion-icon slot="start" name="add-outline"></ion-icon>
+      Agregar Producto
+    </ion-button>
+  </div>
+
+  <div class="productos-list" *ngIf="!loading && productos.length > 0">
+    <div class="producto-item cardio-card" *ngFor="let producto of productos">
+      <div class="producto-content" [routerLink]="['/productos', producto.id]">
+        <div class="producto-info">
+          <h3 class="producto-nombre">{{ producto.nombre }}</h3>
+          <p class="producto-desc" *ngIf="producto.descripcion">{{ producto.descripcion }}</p>
+          <div class="producto-meta">
+            <span class="producto-precio">{{ formatPrice(producto.precio) }}</span>
+            <span class="producto-stock" [class]="getStockClass(producto.stock)">
+              Stock: {{ producto.stock }}
+            </span>
+          </div>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="producto-arrow"></ion-icon>
+      </div>
+      <div class="producto-actions">
+        <ion-button fill="clear" size="small" [routerLink]="['/productos', producto.id, 'editar']">
+          <ion-icon slot="start" name="create-outline"></ion-icon>
+          Editar
+        </ion-button>
+        <ion-button fill="clear" size="small" color="danger" (click)="confirmDelete(producto); $event.stopPropagation()">
+          <ion-icon slot="start" name="trash-outline"></ion-icon>
+          Eliminar
+        </ion-button>
+      </div>
+    </div>
+  </div>
+
+  <div class="loading-state" *ngIf="loading">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Cargando productos...</p>
+  </div>
+</ion-content>

@@ -39,10 +39,13 @@
   margin-left: 4px;
 }
 
-.field-hint {
-  font-size: 11px;
-  color: var(--cardio-text-light);
-  margin: 2px 0 0 4px;
+.field-row {
+  display: flex;
+  gap: 12px;
+}
+
+.field-half {
+  flex: 1;
 }
 
 ion-item {
@@ -58,9 +61,14 @@ ion-item {
   border-radius: 10px;
   margin-bottom: 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: border-color 0.2s ease;
 
   &.item-has-focus {
-    --border-color: var(--cardio-primary);
+    --border-color: var(--ion-color-primary);
+  }
+
+  &.field-error {
+    --border-color: var(--ion-color-danger);
   }
 }
 
@@ -69,20 +77,49 @@ ion-input, ion-select, ion-textarea {
   --padding-start: 0;
 }
 
-ion-toggle {
-  margin: 4px 0;
+.validation-msg {
+  display: block;
+  font-size: 12px;
+  margin: 2px 0 0 4px;
 }
 
-.submit-btn {
+.action-buttons {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.action-btn {
   --border-radius: 12px;
-  height: 52px;
+  height: 50px;
   font-weight: 600;
-  font-size: 16px;
-  margin-top: 8px;
+  font-size: 15px;
+  margin: 0;
 }
 
 .btn-spinner {
   width: 20px;
   height: 20px;
   margin-right: 8px;
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  gap: 16px;
+
+  ion-spinner {
+    width: 36px;
+    height: 36px;
+  }
+
+  p {
+    font-size: 14px;
+    color: var(--cardio-text-light);
+    margin: 0;
+  }
 }

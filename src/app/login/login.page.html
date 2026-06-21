@@ -6,36 +6,70 @@
 
 <ion-content>
   <div class="welcome-section">
+    <div class="logo-container">
+      <ion-icon name="heart-circle-outline" class="logo-icon"></ion-icon>
+    </div>
     <h1>Bienvenido</h1>
     <p>Ingresa tus credenciales para continuar</p>
   </div>
 
-  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-content">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-content" novalidate>
     <div class="field-group">
       <span class="field-label">Correo electrónico</span>
-      <ion-item>
-        <ion-input type="email" formControlName="email" placeholder="ejemplo@correo.com"></ion-input>
+      <ion-item [class.field-error]="emailControl?.invalid && emailControl?.touched">
+        <ion-icon slot="start" name="mail-outline" class="field-icon"></ion-icon>
+        <ion-input
+          type="email"
+          formControlName="email"
+          placeholder="ejemplo@correo.com"
+          autocomplete="email"
+          inputmode="email"
+        ></ion-input>
       </ion-item>
+      <ion-text color="danger" *ngIf="emailControl?.invalid && emailControl?.touched" class="validation-msg">
+        <span *ngIf="emailControl?.errors?.['required']">El correo es obligatorio.</span>
+        <span *ngIf="emailControl?.errors?.['email']">Ingresa un correo válido.</span>
+      </ion-text>
     </div>
 
     <div class="field-group">
       <span class="field-label">Contraseña</span>
-      <ion-item>
-        <ion-input type="password" formControlName="password" placeholder="••••••"></ion-input>
+      <ion-item [class.field-error]="passwordControl?.invalid && passwordControl?.touched">
+        <ion-icon slot="start" name="lock-closed-outline" class="field-icon"></ion-icon>
+        <ion-input
+          type="password"
+          formControlName="password"
+          placeholder="••••••"
+          autocomplete="current-password"
+        ></ion-input>
       </ion-item>
+      <ion-text color="danger" *ngIf="passwordControl?.invalid && passwordControl?.touched" class="validation-msg">
+        <span *ngIf="passwordControl?.errors?.['required']">La contraseña es obligatoria.</span>
+        <span *ngIf="passwordControl?.errors?.['minlength']">Mínimo 6 caracteres.</span>
+      </ion-text>
     </div>
 
-    <ion-text color="danger" class="error-msg" *ngIf="error">
-      <p>{{ error }}</p>
+    <ion-text color="danger" class="error-banner" *ngIf="error">
+      <ion-icon name="alert-circle-outline"></ion-icon>
+      <span>{{ error }}</span>
     </ion-text>
 
-    <ion-button type="submit" expand="block" class="submit-btn" [disabled]="form.invalid">
-      <ion-icon slot="start" name="log-in-outline"></ion-icon>
-      Ingresar
+    <ion-button
+      type="submit"
+      expand="block"
+      class="submit-btn"
+      [disabled]="form.invalid || loading"
+    >
+      <ion-spinner *ngIf="loading" name="crescent" class="btn-spinner"></ion-spinner>
+      <ng-container *ngIf="!loading">
+        <ion-icon slot="start" name="log-in-outline"></ion-icon>
+        Ingresar
+      </ng-container>
     </ion-button>
   </form>
 
   <div class="hint">
+    <ion-icon name="information-circle-outline"></ion-icon>
     <p>Demo: <strong>admin&#64;test.com</strong> / <strong>123456</strong></p>
   </div>
 </ion-content>

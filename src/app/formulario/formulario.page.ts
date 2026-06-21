@@ -1,53 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { ToastController } from '@ionic/angular';
+import { Subject, takeUntil } from 'rxjs';
+import { DataService } from '../services/data.service';
 
 @Component({
   selector: 'app-formulario',
   templateUrl: 'formulario.page.html',
   styleUrls: ['formulario.page.scss'],
 })
-export class FormularioPage implements OnInit {
-  form: FormGroup;
-  mostrarConfirmacion = false;
-
-  confirmacionSections = [
-    {
-      title: 'Variables Actuales',
-      icon: 'pulse-outline',
-      color: 'primary',
-      fields: ['edad', 'sexo', 'presion_arterial', 'colesterol', 'fc_maxima', 'tipo_dolor_pecho'],
-    },
-    {
-      title: 'Datos Antropométricos',
-      icon: 'body-outline',
-      color: 'secondary',
-      fields: ['peso', 'estatura', 'imc', 'circunferencia_cintura', 'relacion_cintura_estatura'],
-    },
-    {
-      title: 'Antecedentes Médicos',
-      icon: 'medkit-outline',
-      color: 'tertiary',
-      fields: ['diabetes', 'hipertension', 'antecedentes_familiares', 'enfermedad_renal', 'medicamentos_actuales'],
-    },
-    {
-      title: 'Hábitos de Vida',
-      icon: 'leaf-outline',
-      color: 'success',
-      fields: ['tabaquismo', 'consumo_alcohol', 'actividad_fisica', 'horas_sueno', 'nivel_estres'],
-    },
-    {
-      title: 'Estudios Clínicos',
-      icon: 'flask-outline',
-      color: 'danger',
-      fields: ['glucosa_sangre', 'trigliceridos', 'hdl', 'ldl', 'saturacion_oxigeno'],
-    },
-    {
-      title: 'Signos Vitales',
-      icon: 'fitness-outline',
-      color: 'primary',
-      fields: ['frecuencia_respiratoria', 'temperatura_corporal', 'presion_sistolica', 'presion_diastolica'],
-    },
-  ];
+export class FormularioPage implements OnInit, OnDestroy {
+  form!: FormGroup;
+  submitting = false;
+  private destroy$ = new Subject<void>();
 
   sexos = [
     { value: 'masculino', label: 'Masculino' },
@@ -76,9 +42,15 @@ export class FormularioPage implements OnInit {
     { value: 'muy_alto', label: 'Muy alto' },
   ];
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private toastCtrl: ToastController,
+    private dataService: DataService,
+  ) {}
+
+  ngOnInit() {
     this.form = this.fb.group({
-      // Variables actuales
       edad: ['', [Validators.required, Validators.min(1), Validators.max(120)]],
       sexo: ['', Validators.required],
       presion_arterial: ['', Validators.required],
@@ -86,53 +58,57 @@ export class FormularioPage implements OnInit {
       fc_maxima: ['', Validators.required],
       tipo_dolor_pecho: ['', Validators.required],
 
-      // Datos antropométricos
       peso: ['', Validators.required],
       estatura: ['', Validators.required],
       imc: [{ value: '', disabled: true }],
       circunferencia_cintura: [''],
       relacion_cintura_estatura: [{ value: '', disabled: true }],
 
-      // Antecedentes médicos
       diabetes: [false],
       hipertension: [false],
       antecedentes_familiares: [false],
       enfermedad_renal: [false],
       medicamentos_actuales: [''],
 
-      // Hábitos de vida
       tabaquismo: [false],
       consumo_alcohol: [''],
       actividad_fisica: [''],
       horas_sueno: ['', [Validators.min(0), Validators.max(24)]],
       nivel_estres: [''],
 
-      // Estudios clínicos
       glucosa_sangre: [''],
       trigliceridos: [''],
       hdl: [''],
       ldl: [''],
       saturacion_oxigeno: ['', [Validators.min(0), Validators.max(100)]],
 
-      // Signos vitales
       frecuencia_respiratoria: [''],
       temperatura_corporal: [''],
       presion_sistolica: [''],
       presion_diastolica: [''],
     });
+
+    this.form.get('peso')?.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => this.updateIMC());
+    this.form.get('estatura')?.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => this.updateIMC());
+
+    this.form.get('circunferencia_cintura')?.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => this.updateRelacionCintura());
+    this.form.get('estatura')?.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => this.updateRelacionCintura());
   }
 
-  ngOnInit() {
-    this.calcularIMC();
-    this.calcularRelacionCintura();
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
-  calcularIMC() {
-    this.form.get('peso')?.valueChanges.subscribe(() => this.updateIMC());
-    this.form.get('estatura')?.valueChanges.subscribe(() => this.updateIMC());
-  }
-
-  updateIMC() {
+  private updateIMC() {
     const peso = this.form.get('peso')?.value;
     const estatura = this.form.get('estatura')?.value;
     if (peso && estatura && estatura > 0) {
@@ -141,12 +117,7 @@ export class FormularioPage implements OnInit {
     }
   }
 
-  calcularRelacionCintura() {
-    this.form.get('circunferencia_cintura')?.valueChanges.subscribe(() => this.updateRelacionCintura());
-    this.form.get('estatura')?.valueChanges.subscribe(() => this.updateRelacionCintura());
-  }
-
-  updateRelacionCintura() {
+  private updateRelacionCintura() {
     const cintura = this.form.get('circunferencia_cintura')?.value;
     const estatura = this.form.get('estatura')?.value;
     if (cintura && estatura && estatura > 0) {
@@ -155,71 +126,55 @@ export class FormularioPage implements OnInit {
     }
   }
 
-  onSubmit() {
-    if (this.form.invalid) return;
+  async onSubmit() {
+    if (this.form.invalid || this.submitting) return;
 
-    if (!this.mostrarConfirmacion) {
-      this.mostrarConfirmacion = true;
-      return;
-    }
+    this.submitting = true;
 
-    console.log('Formulario enviado:', this.form.value);
-    this.mostrarConfirmacion = false;
-  }
+    const v = this.form.getRawValue();
 
-  volverAlFormulario() {
-    this.mostrarConfirmacion = false;
-  }
+    this.dataService.addEvaluacion({
+      edad: Number(v.edad),
+      sexo: v.sexo,
+      presion_arterial: Number(v.presion_arterial),
+      colesterol: Number(v.colesterol),
+      fc_maxima: Number(v.fc_maxima),
+      tipo_dolor_pecho: v.tipo_dolor_pecho,
+      peso: Number(v.peso),
+      estatura: Number(v.estatura),
+      imc: v.imc ? Number(v.imc) : 0,
+      circunferencia_cintura: v.circunferencia_cintura ? Number(v.circunferencia_cintura) : null,
+      relacion_cintura_estatura: v.relacion_cintura_estatura ? Number(v.relacion_cintura_estatura) : null,
+      diabetes: v.diabetes,
+      hipertension: v.hipertension,
+      antecedentes_familiares: v.antecedentes_familiares,
+      enfermedad_renal: v.enfermedad_renal,
+      medicamentos_actuales: v.medicamentos_actuales || '',
+      tabaquismo: v.tabaquismo,
+      consumo_alcohol: v.consumo_alcohol || '',
+      actividad_fisica: v.actividad_fisica || '',
+      horas_sueno: v.horas_sueno ? Number(v.horas_sueno) : null,
+      nivel_estres: v.nivel_estres || '',
+      glucosa_sangre: v.glucosa_sangre ? Number(v.glucosa_sangre) : null,
+      trigliceridos: v.trigliceridos ? Number(v.trigliceridos) : null,
+      hdl: v.hdl ? Number(v.hdl) : null,
+      ldl: v.ldl ? Number(v.ldl) : null,
+      saturacion_oxigeno: v.saturacion_oxigeno ? Number(v.saturacion_oxigeno) : null,
+      frecuencia_respiratoria: v.frecuencia_respiratoria ? Number(v.frecuencia_respiratoria) : null,
+      temperatura_corporal: v.temperatura_corporal ? Number(v.temperatura_corporal) : null,
+      presion_sistolica: v.presion_sistolica ? Number(v.presion_sistolica) : null,
+      presion_diastolica: v.presion_diastolica ? Number(v.presion_diastolica) : null,
+    });
 
-  getLabel(prop: string): string {
-    const labels: Record<string, string> = {
-      edad: 'Edad',
-      sexo: 'Sexo',
-      presion_arterial: 'Presión Arterial',
-      colesterol: 'Colesterol',
-      fc_maxima: 'Frecuencia Cardíaca Máxima',
-      tipo_dolor_pecho: 'Tipo de Dolor en el Pecho',
-      peso: 'Peso',
-      estatura: 'Estatura',
-      imc: 'IMC',
-      circunferencia_cintura: 'Circunferencia de Cintura',
-      relacion_cintura_estatura: 'Relación Cintura-Estatura',
-      diabetes: 'Diabetes',
-      hipertension: 'Hipertensión',
-      antecedentes_familiares: 'Antecedentes familiares',
-      enfermedad_renal: 'Enfermedad renal',
-      medicamentos_actuales: 'Medicamentos actuales',
-      tabaquismo: 'Tabaquismo',
-      consumo_alcohol: 'Consumo de alcohol',
-      actividad_fisica: 'Actividad física',
-      horas_sueno: 'Horas de sueño',
-      nivel_estres: 'Nivel de estrés',
-      glucosa_sangre: 'Glucosa en sangre',
-      trigliceridos: 'Triglicéridos',
-      hdl: 'HDL',
-      ldl: 'LDL',
-      saturacion_oxigeno: 'Saturación de Oxígeno',
-      frecuencia_respiratoria: 'Frecuencia Respiratoria',
-      temperatura_corporal: 'Temperatura Corporal',
-      presion_sistolica: 'Presión Sistólica',
-      presion_diastolica: 'Presión Diastólica',
-    };
-    return labels[prop] || prop;
-  }
+    const toast = await this.toastCtrl.create({
+      message: 'Evaluación guardada correctamente',
+      duration: 2000,
+      position: 'bottom',
+      color: 'success',
+    });
+    await toast.present();
 
-  formatValue(value: any, prop: string): string {
-    if (value === '' || value === null || value === undefined) return '—';
-
-    const selectLabels: Record<string, Record<string, string>> = {
-      sexo: { masculino: 'Masculino', femenino: 'Femenino' },
-      tipo_dolor_pecho: { tipica: 'Angina típica', atipica: 'Angina atípica', no_anginal: 'Dolor no anginal', asintomatico: 'Asintomático' },
-      consumo_alcohol: { nunca: 'Nunca', ocasional: 'Ocasional', moderado: 'Moderado', frecuente: 'Frecuente' },
-      actividad_fisica: { sedentario: 'Sedentario', ligero: 'Ligero', moderado: 'Moderado', activo: 'Activo', intenso: 'Muy intenso' },
-      nivel_estres: { bajo: 'Bajo', moderado: 'Moderado', alto: 'Alto', muy_alto: 'Muy alto' },
-    };
-
-    if (typeof value === 'boolean') return value ? 'Sí' : 'No';
-    if (selectLabels[prop]?.[value]) return selectLabels[prop][value];
-    return String(value);
+    this.submitting = false;
+    this.router.navigate(['/home']);
   }
 }
