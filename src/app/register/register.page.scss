@@ -106,7 +106,7 @@
   margin-right: 8px;
 }
 
-.register-section {
+.login-section {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -119,31 +119,11 @@
     margin: 0;
   }
 
-  .register-btn {
+  .login-link {
     --color: var(--ion-color-primary);
     font-weight: 600;
     font-size: 14px;
     --padding-start: 8px;
     --padding-end: 8px;
-  }
-}
-
-.hint {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  text-align: center;
-  padding: 24px 16px;
-
-  ion-icon {
-    font-size: 16px;
-    color: var(--cardio-text-light);
-  }
-
-  p {
-    font-size: 13px;
-    color: var(--cardio-text-light);
-    margin: 0;
   }
 }

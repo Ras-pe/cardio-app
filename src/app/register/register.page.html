@@ -1,16 +1,21 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Iniciar Sesión</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="goToLogin()">
+        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Crear Cuenta</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <div class="welcome-section">
     <div class="logo-container">
-      <ion-icon name="heart-circle-outline" class="logo-icon"></ion-icon>
+      <ion-icon name="person-add-outline" class="logo-icon"></ion-icon>
     </div>
-    <h1>Bienvenido</h1>
-    <p>Ingresa tus credenciales para continuar</p>
+    <h1>Regístrate</h1>
+    <p>Crea una cuenta para empezar a usar CardioApp</p>
   </div>
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-content" novalidate>
@@ -31,12 +36,27 @@
       <span class="field-label">Contraseña</span>
       <ion-item [class.field-error]="passwordControl?.invalid && passwordControl?.touched">
         <ion-icon slot="start" name="lock-closed-outline" class="field-icon"></ion-icon>
-        <ion-input type="password" formControlName="password" placeholder="******"
-          autocomplete="current-password"></ion-input>
+        <ion-input type="password" formControlName="password" placeholder="Mínimo 6 caracteres"
+          autocomplete="new-password"></ion-input>
       </ion-item>
       <ion-text color="danger" *ngIf="passwordControl?.invalid && passwordControl?.touched" class="validation-msg">
         <span *ngIf="passwordControl?.errors?.['required']">La contraseña es obligatoria.</span>
         <span *ngIf="passwordControl?.errors?.['minlength']">Mínimo 6 caracteres.</span>
+      </ion-text>
+    </div>
+
+    <div class="field-group">
+      <span class="field-label">Confirmar contraseña</span>
+      <ion-item [class.field-error]="(confirmPasswordControl?.invalid && confirmPasswordControl?.touched) || hasPasswordMismatch">
+        <ion-icon slot="start" name="lock-closed-outline" class="field-icon"></ion-icon>
+        <ion-input type="password" formControlName="confirmPassword" placeholder="Repite tu contraseña"
+          autocomplete="new-password"></ion-input>
+      </ion-item>
+      <ion-text color="danger" *ngIf="confirmPasswordControl?.invalid && confirmPasswordControl?.touched" class="validation-msg">
+        <span *ngIf="confirmPasswordControl?.errors?.['required']">Confirma tu contraseña.</span>
+      </ion-text>
+      <ion-text color="danger" *ngIf="hasPasswordMismatch" class="validation-msg">
+        <span>Las contraseñas no coinciden.</span>
       </ion-text>
     </div>
 
@@ -48,21 +68,16 @@
     <ion-button type="submit" expand="block" class="submit-btn" [disabled]="form.invalid || loading">
       <ion-spinner *ngIf="loading" name="crescent" class="btn-spinner"></ion-spinner>
       <ng-container *ngIf="!loading">
-        <ion-icon slot="start" name="log-in-outline"></ion-icon>
-        Ingresar
+        <ion-icon slot="start" name="person-add-outline"></ion-icon>
+        Crear Cuenta
       </ng-container>
     </ion-button>
   </form>
 
-  <div class="register-section">
-    <p>¿No tienes cuenta?</p>
-    <ion-button fill="clear" class="register-btn" (click)="goToRegister()">
-      Crear una cuenta
+  <div class="login-section">
+    <p>¿Ya tienes cuenta?</p>
+    <ion-button fill="clear" class="login-link" (click)="goToLogin()">
+      Iniciar sesión
     </ion-button>
-  </div>
-
-  <div class="hint">
-    <ion-icon name="information-circle-outline"></ion-icon>
-    <p>Demo: <strong>admin&#64;test.com</strong> / <strong>123456</strong></p>
   </div>
 </ion-content>

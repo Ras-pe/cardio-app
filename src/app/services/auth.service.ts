@@ -7,20 +7,27 @@ export interface AuthToken {
   expiresAt: number;
 }
 
+export interface RegisteredUser {
+  email: string;
+  password: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private readonly TOKEN_KEY = 'cardio-auth-token';
   private readonly SESSION_KEY = 'cardio-auth';
+  private readonly USERS_KEY = 'cardio-registered-users';
   private readonly TOKEN_DURATION = 3600000;
 
-  private static readonly USERS = [
+  private static readonly SEED_USERS: RegisteredUser[] = [
     { email: 'admin@test.com', password: '123456' },
     { email: 'user@test.com', password: 'password' },
   ];
 
   constructor(private router: Router) {
+    this.seedUsersIfEmpty();
     this.cleanExpiredSession();
   }
 
@@ -31,7 +38,8 @@ export class AuthService {
       return { success: false, error: 'Correo y contraseña son obligatorios.' };
     }
 
-    const user = AuthService.USERS.find(
+    const users = this.getUsers();
+    const user = users.find(
       u => u.email.toLowerCase() === email.toLowerCase() && u.password === password
     );
 
@@ -48,6 +56,26 @@ export class AuthService {
 
     localStorage.setItem(this.TOKEN_KEY, token);
     localStorage.setItem(this.SESSION_KEY, JSON.stringify(authData));
+
+    return { success: true };
+  }
+
+  async register(email: string, password: string): Promise<{ success: boolean; error?: string }> {
+    await this.simulateDelay();
+
+    if (!email || !password) {
+      return { success: false, error: 'Correo y contraseña son obligatorios.' };
+    }
+
+    const users = this.getUsers();
+    const exists = users.some(u => u.email.toLowerCase() === email.toLowerCase());
+
+    if (exists) {
+      return { success: false, error: 'Este correo ya está registrado. Intenta con otro.' };
+    }
+
+    users.push({ email: email.toLowerCase(), password });
+    localStorage.setItem(this.USERS_KEY, JSON.stringify(users));
 
     return { success: true };
   }
@@ -75,6 +103,33 @@ export class AuthService {
 
   getToken(): string | null {
     return localStorage.getItem(this.TOKEN_KEY);
+  }
+
+  getUsers(): RegisteredUser[] {
+    const raw = localStorage.getItem(this.USERS_KEY);
+    if (!raw) return [];
+    try {
+      return JSON.parse(raw) as RegisteredUser[];
+    } catch {
+      localStorage.removeItem(this.USERS_KEY);
+      return [];
+    }
+  }
+
+  private seedUsersIfEmpty(): void {
+    const raw = localStorage.getItem(this.USERS_KEY);
+    if (!raw) {
+      localStorage.setItem(this.USERS_KEY, JSON.stringify(AuthService.SEED_USERS));
+      return;
+    }
+    try {
+      const users = JSON.parse(raw) as RegisteredUser[];
+      if (!Array.isArray(users) || users.length === 0) {
+        localStorage.setItem(this.USERS_KEY, JSON.stringify(AuthService.SEED_USERS));
+      }
+    } catch {
+      localStorage.setItem(this.USERS_KEY, JSON.stringify(AuthService.SEED_USERS));
+    }
   }
 
   private getSession(): AuthToken | null {

@@ -5,8 +5,9 @@
       <ion-button routerLink="/perfil">
         <ion-icon slot="icon-only" name="person-circle-outline"></ion-icon>
       </ion-button>
-      <ion-button (click)="logout()">
-        <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
+      <ion-button fill="clear" color="light" (click)="logout()" class="logout-btn">
+        <ion-icon slot="start" name="log-out-outline"></ion-icon>
+        Salir
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
