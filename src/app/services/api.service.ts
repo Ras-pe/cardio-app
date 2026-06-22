@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, timeout, catchError, of } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { ConfigService } from './config.service';
 
 export interface HeartFeatures {
   age: number;
@@ -29,21 +29,51 @@ export interface PredictionResult {
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
-  private apiUrl = environment.apiUrl;
-
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private config: ConfigService,
+  ) {}
 
   predict(features: HeartFeatures): Observable<PredictionResult> {
-    return this.http.post<PredictionResult>(`${this.apiUrl}/predict`, features).pipe(
+    const urls = this.config.getAllUrls();
+    return this.tryPredict(urls, 0, features);
+  }
+
+  private tryPredict(urls: string[], index: number, features: HeartFeatures): Observable<PredictionResult> {
+    if (index >= urls.length) {
+      return of(null as unknown as PredictionResult);
+    }
+    const url = urls[index];
+    return this.http.post<PredictionResult>(`${url}/predict`, features).pipe(
       timeout(5000),
-      catchError(() => of(null as unknown as PredictionResult))
+      catchError(() => {
+        if (index < urls.length - 1) {
+          const next = urls[index + 1];
+          const idx = urls.findIndex(u => u === next);
+          return this.tryPredict(urls, idx, features);
+        }
+        return of(null as unknown as PredictionResult);
+      }),
     );
   }
 
   healthCheck(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/`).pipe(
+    const urls = this.config.getAllUrls();
+    return this.tryHealth(urls, 0);
+  }
+
+  private tryHealth(urls: string[], index: number): Observable<any> {
+    if (index >= urls.length) {
+      return of(null);
+    }
+    return this.http.get(`${urls[index]}/`).pipe(
       timeout(3000),
-      catchError(() => of(null))
+      catchError(() => {
+        if (index < urls.length - 1) {
+          return this.tryHealth(urls, index + 1);
+        }
+        return of(null);
+      }),
     );
   }
 }

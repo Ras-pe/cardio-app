@@ -1,0 +1,58 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Reportes</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="header-section">
+    <h1>Reportes de Evaluaciones</h1>
+    <p>Resultados del modelo ML y estimaciones locales</p>
+  </div>
+
+  <div class="table-wrapper" *ngIf="reportes.length > 0">
+    <table class="reporte-table">
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Paciente</th>
+          <th>Teléfono</th>
+          <th>Resultado</th>
+          <th>Riesgo</th>
+          <th>Fuente</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let r of reportes">
+          <td class="cell-fecha">{{ r.fecha }}</td>
+          <td class="cell-paciente">{{ r.paciente }}</td>
+          <td class="cell-telefono">{{ r.telefono || '—' }}</td>
+          <td>
+            <span class="result-label" [class.risk]="r.prediction === 1" [class.no-risk]="r.prediction === 0">
+              {{ r.label }}
+            </span>
+          </td>
+          <td>
+            <span class="risk-badge" [style.background]="riskColor(r.risk_level)">
+              {{ r.risk_level }} ({{ r.probability_risk }}%)
+            </span>
+          </td>
+          <td>
+            <span class="source-badge" [class.ml]="r.source === 'ML'" [class.local]="r.source === 'local'">
+              {{ r.source }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="empty-state" *ngIf="reportes.length === 0">
+    <ion-icon name="document-text-outline"></ion-icon>
+    <h2>Sin reportes</h2>
+    <p>Aún no hay evaluaciones registradas</p>
+  </div>
+</ion-content>

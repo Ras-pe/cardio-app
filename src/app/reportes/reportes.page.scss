@@ -1,0 +1,136 @@
+.header-section {
+  padding: 24px 20px 8px;
+
+  h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--cardio-text);
+    margin: 0 0 6px;
+  }
+
+  p {
+    font-size: 14px;
+    color: var(--cardio-text-light);
+    margin: 0;
+  }
+}
+
+.table-wrapper {
+  padding: 16px;
+  overflow-x: auto;
+}
+
+.reporte-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+
+  th {
+    text-align: left;
+    padding: 10px 12px;
+    font-weight: 700;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--cardio-text-light);
+    border-bottom: 2px solid var(--cardio-border);
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 12px;
+    border-bottom: 1px solid var(--cardio-border);
+    vertical-align: middle;
+  }
+
+  tbody tr:hover {
+    background: rgba(0, 0, 0, 0.02);
+  }
+}
+
+.cell-fecha {
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+.cell-paciente {
+  font-weight: 600;
+}
+
+.cell-telefono {
+  white-space: nowrap;
+  color: var(--cardio-text-light);
+}
+
+.result-label {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+
+  &.risk {
+    background: #fee2e2;
+    color: #dc2626;
+  }
+
+  &.no-risk {
+    background: #d1fae5;
+    color: #059669;
+  }
+}
+
+.risk-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.source-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  &.ml {
+    background: #e0e7ff;
+    color: #4338ca;
+  }
+
+  &.local {
+    background: #fef3c7;
+    color: #d97706;
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+
+  ion-icon {
+    font-size: 64px;
+    color: var(--cardio-text-light);
+    opacity: 0.4;
+  }
+
+  h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--cardio-text);
+    margin: 12px 0 4px;
+  }
+
+  p {
+    font-size: 14px;
+    color: var(--cardio-text-light);
+    margin: 0;
+  }
+}

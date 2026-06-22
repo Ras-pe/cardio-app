@@ -4,8 +4,8 @@ import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { DataService } from '../services/data.service';
 import { ApiService, HeartFeatures, PredictionResult } from '../services/api.service';
+import { ConfigService } from '../services/config.service';
 import { ResultadoPrediccionComponent } from '../resultado-prediccion/resultado-prediccion.component';
-import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-formulario',
@@ -61,10 +61,13 @@ export class FormularioPage implements OnInit {
     private modalCtrl: ModalController,
     private dataService: DataService,
     private apiService: ApiService,
+    private config: ConfigService,
   ) {}
 
   ngOnInit() {
     this.form = this.fb.group({
+      nombre_paciente: [''],
+      telefono_paciente: [''],
       edad: ['', [Validators.required, Validators.min(1), Validators.max(120)]],
       sexo: [null, Validators.required],
       presion_arterial: ['', [Validators.required, Validators.min(80), Validators.max(250)]],
@@ -84,6 +87,8 @@ export class FormularioPage implements OnInit {
   private formToEvalData(): any {
     const v = this.form.value;
     return {
+      nombre_paciente: v.nombre_paciente?.trim() || '',
+      telefono_paciente: v.telefono_paciente?.trim() || '',
       edad: Number(v.edad),
       sexo: Number(v.sexo),
       presion_arterial: Number(v.presion_arterial),
@@ -131,6 +136,7 @@ export class FormularioPage implements OnInit {
     this.apiService.predict(features).subscribe({
       next: async (result) => {
         if (result) {
+          this.guardarPrediccion(evaluacion, result, 'ML');
           await this.mostrarResultadoML(evaluacion, result);
         } else {
           await this.mostrarResultadoFallback(evaluacion);
@@ -156,7 +162,7 @@ export class FormularioPage implements OnInit {
         evaluacion,
         prediccion: result,
         esML: true,
-        servidor: environment.apiUrl,
+        servidor: this.config.getActiveUrl(),
       },
     });
     await modal.present();
@@ -167,6 +173,15 @@ export class FormularioPage implements OnInit {
     const riskScore = this.dataService.calculateRisk(evaluacion);
     const riskLevel = this.dataService.getRiskLevel(riskScore);
     const riskColor = this.dataService.getRiskColor(riskScore);
+
+    const fallbackResult = {
+      prediction: riskScore >= 50 ? 1 : 0,
+      label: riskScore >= 50 ? 'Riesgo de enfermedad cardíaca' : 'Sin riesgo significativo',
+      probability_risk: riskScore,
+      probability_no_risk: 100 - riskScore,
+      risk_level: riskLevel,
+    };
+    this.guardarPrediccion(evaluacion, fallbackResult as any, 'local');
 
     const modal = await this.modalCtrl.create({
       component: ResultadoPrediccionComponent,
@@ -181,5 +196,20 @@ export class FormularioPage implements OnInit {
     });
     await modal.present();
     await modal.onDidDismiss();
+  }
+
+  private guardarPrediccion(evaluacion: any, result: PredictionResult, source: 'ML' | 'local') {
+    this.dataService.addPrediccion({
+      evaluacionId: evaluacion.id,
+      fecha: evaluacion.fecha,
+      paciente: evaluacion.nombre_paciente?.trim() || 'Paciente',
+      telefono: evaluacion.telefono_paciente?.trim() || undefined,
+      prediction: result.prediction,
+      label: result.label,
+      probability_risk: result.probability_risk,
+      probability_no_risk: result.probability_no_risk,
+      risk_level: result.risk_level,
+      source,
+    });
   }
 }

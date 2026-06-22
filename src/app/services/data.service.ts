@@ -5,11 +5,14 @@ export interface HistoryRecord {
   fecha: string;
   tipo: string;
   descripcion: string;
+  paciente?: string;
 }
 
 export interface Evaluacion {
   id: number;
   fecha: string;
+  nombre_paciente: string;
+  telefono_paciente: string;
   edad: number;
   sexo: number;
   presion_arterial: number;
@@ -25,19 +28,36 @@ export interface Evaluacion {
   talasemia: number;
 }
 
+export interface PrediccionReport {
+  id: number;
+  evaluacionId: number;
+  fecha: string;
+  paciente: string;
+  telefono?: string;
+  prediction: number;
+  label: string;
+  probability_risk: number;
+  probability_no_risk: number;
+  risk_level: string;
+  source: 'ML' | 'local';
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
   private readonly HISTORY_KEY = 'cardio-history';
   private readonly EVAL_KEY = 'cardio-evaluaciones';
+  private readonly PRED_KEY = 'cardio-predicciones';
 
   private history: HistoryRecord[] = [];
   private evaluaciones: Evaluacion[] = [];
+  private predicciones: PrediccionReport[] = [];
 
   constructor() {
     this.loadHistory();
     this.loadEvaluaciones();
+    this.loadPredicciones();
   }
 
   // --- Historial ---
@@ -141,6 +161,40 @@ export class DataService {
     return 'medium';
   }
 
+  // --- Predicciones ---
+  private loadPredicciones(): void {
+    try {
+      const raw = localStorage.getItem(this.PRED_KEY);
+      if (raw) {
+        this.predicciones = JSON.parse(raw);
+      }
+    } catch {
+      this.predicciones = [];
+    }
+  }
+
+  private savePredicciones(): void {
+    localStorage.setItem(this.PRED_KEY, JSON.stringify(this.predicciones));
+  }
+
+  getPredicciones(): PrediccionReport[] {
+    try {
+      const raw = localStorage.getItem(this.PRED_KEY);
+      if (raw) return JSON.parse(raw);
+    } catch {}
+    return [];
+  }
+
+  addPrediccion(data: Omit<PrediccionReport, 'id'>): PrediccionReport {
+    const nextId = this.predicciones.length > 0
+      ? Math.max(...this.predicciones.map(p => p.id)) + 1
+      : 1;
+    const report: PrediccionReport = { ...data, id: nextId };
+    this.predicciones.push(report);
+    this.savePredicciones();
+    return report;
+  }
+
   addEvaluacion(data: Omit<Evaluacion, 'id' | 'fecha'>): Evaluacion {
     const nextId = this.evaluaciones.length > 0
       ? Math.max(...this.evaluaciones.map(e => e.id)) + 1
@@ -153,10 +207,15 @@ export class DataService {
     this.evaluaciones.push(evaluacion);
     this.saveEvaluaciones();
 
+    const pacienteInfo = data.nombre_paciente
+      ? `Paciente: ${data.nombre_paciente}${data.telefono_paciente ? ` - Tel: ${data.telefono_paciente}` : ''}`
+      : '';
+    const nombrePaciente = data.nombre_paciente?.trim() || 'Paciente';
     this.addHistoryRecord({
       fecha: evaluacion.fecha,
       tipo: 'Evaluación',
-      descripcion: `Evaluación cardiovascular #${nextId} - Riesgo calculado`,
+      descripcion: `Evaluación cardiovascular #${nextId} - Riesgo calculado${pacienteInfo ? ` (${pacienteInfo})` : ''}`,
+      paciente: nombrePaciente,
     });
 
     return evaluacion;

@@ -21,6 +21,7 @@
           <span class="timeline-badge" [class]="'badge-' + record.tipo.toLowerCase()">{{ record.tipo }}</span>
           <span class="timeline-date">{{ record.fecha }}</span>
         </div>
+        <p class="timeline-paciente" *ngIf="record.paciente">{{ record.paciente }}</p>
         <p class="timeline-desc">{{ record.descripcion }}</p>
       </div>
     </div>

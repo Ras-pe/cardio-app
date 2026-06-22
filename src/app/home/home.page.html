@@ -19,42 +19,6 @@
     <p>Bienvenido, {{ userEmail }}</p>
   </div>
 
-  <div class="risk-card cardio-card">
-    <div class="risk-gauge">
-      <div class="gauge-ring">
-        <svg viewBox="0 0 120 120">
-          <circle cx="60" cy="60" r="54" fill="none" stroke="var(--cardio-border)" stroke-width="8"/>
-          <circle cx="60" cy="60" r="54" fill="none" stroke="var(--cardio-accent)" stroke-width="8"
-            stroke-dasharray="339.292" stroke-dashoffset="94.9" stroke-linecap="round"
-            transform="rotate(-90 60 60)"/>
-        </svg>
-        <div class="gauge-center">
-          <span class="gauge-value">{{ riskScore }}%</span>
-          <span class="gauge-label">Riesgo</span>
-        </div>
-      </div>
-      <div class="risk-info">
-        <span class="risk-badge" [style.background]="'var(--ion-color-' + riskColor + ')'">
-          {{ riskLevel }}
-        </span>
-        <p>Completa tus datos para ver el cálculo completo</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="section-title">Resumen Rápido</div>
-  <ion-grid>
-    <ion-row>
-      <ion-col size="6" *ngFor="let stat of quickStats">
-        <div class="cardio-card cardio-stat">
-          <ion-icon [name]="stat.icon" [color]="stat.color"></ion-icon>
-          <div class="value">{{ stat.value }}</div>
-          <div class="label">{{ stat.label }}</div>
-        </div>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-
   <div class="section-title">Acciones</div>
   <div class="action-buttons">
     <ion-button expand="block" routerLink="/formulario" class="action-btn">
@@ -68,6 +32,14 @@
     <ion-button expand="block" fill="outline" class="action-btn" routerLink="/productos">
       <ion-icon slot="start" name="cube-outline"></ion-icon>
       Productos
+    </ion-button>
+    <ion-button expand="block" fill="outline" class="action-btn" routerLink="/reportes">
+      <ion-icon slot="start" name="bar-chart-outline"></ion-icon>
+      Reportes
+    </ion-button>
+    <ion-button expand="block" fill="outline" class="action-btn" routerLink="/configuracion">
+      <ion-icon slot="start" name="settings-outline"></ion-icon>
+      Configuración
     </ion-button>
   </div>
 

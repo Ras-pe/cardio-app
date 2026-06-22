@@ -55,6 +55,16 @@ const routes: Routes = [
     path: 'productos/:id/editar',
     loadChildren: () => import('./productos/producto-detail.module').then(m => m.ProductoDetailPageModule),
     canActivate: [AuthGuard]
+  },
+  {
+    path: 'reportes',
+    loadChildren: () => import('./reportes/reportes.module').then(m => m.ReportesPageModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'configuracion',
+    loadChildren: () => import('./configuracion/configuracion.module').then(m => m.ConfiguracionPageModule),
+    canActivate: [AuthGuard]
   }
 ];
 

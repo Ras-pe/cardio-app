@@ -1,0 +1,80 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Configuración</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="header-section">
+    <h1>Servidores</h1>
+    <p>Gestiona los servidores de la API de predicción</p>
+  </div>
+
+  <div class="server-list">
+    <div class="server-card cardio-card" *ngFor="let server of servers">
+      <div class="server-header">
+        <div class="server-name">
+          <ion-icon name="server-outline" color="primary"></ion-icon>
+          <span>{{ server.name }}</span>
+        </div>
+        <div class="server-actions">
+          <ion-button fill="clear" size="small" (click)="testServer(server)">
+            <ion-icon slot="icon-only" name="pulse-outline"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" size="small" (click)="editServer(server)">
+            <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" size="small" color="danger" (click)="deleteServer(server)">
+            Eliminar
+          </ion-button>
+        </div>
+      </div>
+      <div class="server-details">
+        <span class="server-ip">{{ server.ip }}:{{ server.port }}</span>
+        <span class="server-status" [class.active]="server.active" [class.testing]="server._testing">
+          {{ server._testing ? 'Probando...' : server.active ? 'Activo' : 'Inactivo' }}
+        </span>
+      </div>
+      <div class="server-test-msg" *ngIf="server._testMsg" [class.success]="server._testOk" [class.error]="!server._testOk">
+        {{ server._testMsg }}
+      </div>
+      <ion-button expand="block" fill="outline" size="small" *ngIf="!server.active"
+        (click)="activateServer(server.id)">
+        Usar como activo
+      </ion-button>
+    </div>
+  </div>
+
+  <div class="add-section">
+    <ion-button expand="block" (click)="showAddForm = true" *ngIf="!showAddForm">
+      <ion-icon slot="start" name="add-outline"></ion-icon>
+      Agregar servidor
+    </ion-button>
+
+    <div class="add-form" *ngIf="showAddForm">
+      <h3>{{ editingId ? 'Editar servidor' : 'Nuevo servidor' }}</h3>
+      <ion-item>
+        <ion-label position="stacked">Nombre</ion-label>
+        <ion-input [(ngModel)]="formName" placeholder="Ej: Servidor de producción"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Dirección IP</ion-label>
+        <ion-input [(ngModel)]="formIp" placeholder="Ej: 192.168.1.50"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Puerto</ion-label>
+        <ion-input type="number" [(ngModel)]="formPort" placeholder="Ej: 8000"></ion-input>
+      </ion-item>
+      <div class="form-buttons">
+        <ion-button (click)="saveServer()" [disabled]="!formName || !formIp || !formPort">
+          <ion-icon slot="start" name="save-outline"></ion-icon>
+          Guardar
+        </ion-button>
+        <ion-button fill="outline" (click)="cancelForm()">Cancelar</ion-button>
+      </div>
+    </div>
+  </div>
+</ion-content>
