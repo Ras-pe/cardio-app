@@ -1,0 +1,205 @@
+.result-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding-top: 16px;
+}
+
+.gauge-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.gauge-ring {
+  position: relative;
+  width: 160px;
+  height: 160px;
+}
+
+.gauge-ring svg {
+  width: 100%;
+  height: 100%;
+}
+
+.gauge-progress {
+  transition: stroke-dashoffset 0.8s ease;
+}
+
+.gauge-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.gauge-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--cardio-text);
+  line-height: 1;
+}
+
+.gauge-label {
+  font-size: 12px;
+  color: var(--cardio-text-light);
+  margin-top: 4px;
+}
+
+.risk-badge-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.risk-badge {
+  padding: 6px 24px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 16px;
+  color: #fff;
+}
+
+.ml-details {
+  width: 100%;
+  background: var(--cardio-card-bg, #f8f9fa);
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid var(--cardio-border);
+}
+
+.server-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--cardio-border);
+}
+
+.server-info ion-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.server-info-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.server-label {
+  font-size: 11px;
+  color: var(--cardio-text-light);
+}
+
+.server-value {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--cardio-text);
+  word-break: break-all;
+}
+
+.server-badge {
+  font-size: 10px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--ion-color-primary);
+  padding: 2px 8px;
+  border-radius: 10px;
+  align-self: flex-start;
+  margin-top: 2px;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+}
+
+.detail-row + .detail-row {
+  border-top: 1px solid var(--cardio-border);
+}
+
+.detail-label {
+  font-size: 13px;
+  color: var(--cardio-text-light);
+}
+
+.detail-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--cardio-text);
+}
+
+.fallback-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f0f0f0;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: #666;
+  width: 100%;
+}
+
+.fallback-note .server-info-text {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.fallback-note .server-label {
+  font-size: 10px;
+  color: #999;
+}
+
+.stats-section {
+  width: 100%;
+}
+
+.section-subtitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--cardio-text);
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.stat-item {
+  background: var(--cardio-card-bg, #f8f9fa);
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid var(--cardio-border);
+}
+
+.stat-item ion-icon {
+  font-size: 22px;
+}
+
+.stat-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--cardio-text);
+}
+
+.stat-label {
+  font-size: 11px;
+  color: var(--cardio-text-light);
+  text-align: center;
+}
+
+.button-section {
+  width: 100%;
+  padding-bottom: 16px;
+}

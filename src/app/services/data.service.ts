@@ -11,35 +11,18 @@ export interface Evaluacion {
   id: number;
   fecha: string;
   edad: number;
-  sexo: string;
+  sexo: number;
   presion_arterial: number;
   colesterol: number;
   fc_maxima: number;
-  tipo_dolor_pecho: string;
-  peso: number;
-  estatura: number;
-  imc: number;
-  circunferencia_cintura: number | null;
-  relacion_cintura_estatura: number | null;
-  diabetes: boolean;
-  hipertension: boolean;
-  antecedentes_familiares: boolean;
-  enfermedad_renal: boolean;
-  medicamentos_actuales: string;
-  tabaquismo: boolean;
-  consumo_alcohol: string;
-  actividad_fisica: string;
-  horas_sueno: number | null;
-  nivel_estres: string;
-  glucosa_sangre: number | null;
-  trigliceridos: number | null;
-  hdl: number | null;
-  ldl: number | null;
-  saturacion_oxigeno: number | null;
-  frecuencia_respiratoria: number | null;
-  temperatura_corporal: number | null;
-  presion_sistolica: number | null;
-  presion_diastolica: number | null;
+  tipo_dolor_pecho: number;
+  ayunas_glucosa_alta: boolean;
+  ecg_reposo: number;
+  angina_ejercicio: boolean;
+  depresion_st: number;
+  pendiente_st: number;
+  vasos_coloreados: number;
+  talasemia: number;
 }
 
 @Injectable({
@@ -116,6 +99,46 @@ export class DataService {
 
   getUltimaEvaluacion(): Evaluacion | null {
     return this.evaluaciones.length > 0 ? this.evaluaciones[this.evaluaciones.length - 1] : null;
+  }
+
+  calculateRisk(ev: Evaluacion): number {
+    let score = 0;
+
+    if (ev.edad > 55) score += 15;
+    else if (ev.edad > 45) score += 10;
+    else if (ev.edad > 35) score += 5;
+
+    if (ev.sexo === 1) score += 5;
+
+    if (ev.presion_arterial > 140) score += 15;
+    else if (ev.presion_arterial > 130) score += 10;
+    else if (ev.presion_arterial > 120) score += 5;
+
+    if (ev.colesterol > 240) score += 15;
+    else if (ev.colesterol > 200) score += 10;
+    else if (ev.colesterol > 180) score += 5;
+
+    if (ev.fc_maxima < 120) score += 10;
+    else if (ev.fc_maxima < 150) score += 5;
+
+    if (ev.ayunas_glucosa_alta) score += 10;
+    if (ev.angina_ejercicio) score += 10;
+
+    return Math.min(score, 100);
+  }
+
+  getRiskLevel(score: number): string {
+    if (score >= 70) return 'Alto';
+    if (score >= 40) return 'Moderado';
+    if (score > 0) return 'Bajo';
+    return 'Sin datos';
+  }
+
+  getRiskColor(score: number): string {
+    if (score >= 70) return 'danger';
+    if (score >= 40) return 'warning';
+    if (score > 0) return 'success';
+    return 'medium';
   }
 
   addEvaluacion(data: Omit<Evaluacion, 'id' | 'fecha'>): Evaluacion {
