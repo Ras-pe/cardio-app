@@ -33,7 +33,7 @@
         </div>
       </div>
       <div class="server-details">
-        <span class="server-ip">{{ server.ip }}:{{ server.port }}</span>
+        <span class="server-ip">{{ server.ip.includes('://') ? server.ip : server.ip + ':' + server.port }}</span>
         <span class="server-status" [class.active]="server.active" [class.testing]="server._testing">
           {{ server._testing ? 'Probando...' : server.active ? 'Activo' : 'Inactivo' }}
         </span>
@@ -61,15 +61,15 @@
         <ion-input [(ngModel)]="formName" placeholder="Ej: Servidor de producción"></ion-input>
       </ion-item>
       <ion-item>
-        <ion-label position="stacked">Dirección IP</ion-label>
-        <ion-input [(ngModel)]="formIp" placeholder="Ej: 192.168.1.50"></ion-input>
+        <ion-label position="stacked">Dirección IP o URL</ion-label>
+        <ion-input [(ngModel)]="formIp" placeholder="Ej: 192.168.1.50 o https://tunel.ngrok.dev"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">Puerto</ion-label>
         <ion-input type="number" [(ngModel)]="formPort" placeholder="Ej: 8000"></ion-input>
       </ion-item>
       <div class="form-buttons">
-        <ion-button (click)="saveServer()" [disabled]="!formName || !formIp || !formPort">
+        <ion-button (click)="saveServer()" [disabled]="!canSave">
           <ion-icon slot="start" name="save-outline"></ion-icon>
           Guardar
         </ion-button>

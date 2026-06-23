@@ -53,20 +53,26 @@ export class ConfiguracionPage implements ViewWillEnter {
     this.loadServers();
   }
 
+  get canSave(): boolean {
+    const isUrl = this.formIp.includes('://');
+    return !!this.formName && !!this.formIp && (isUrl || !!this.formPort);
+  }
+
   saveServer(): void {
-    if (!this.formName || !this.formIp || !this.formPort) return;
+    const isUrl = this.formIp.includes('://');
+    if (!this.formName || !this.formIp || (!isUrl && !this.formPort)) return;
 
     if (this.editingId) {
       this.config.updateServer(this.editingId, {
         name: this.formName,
         ip: this.formIp,
-        port: this.formPort,
+        port: isUrl ? 0 : this.formPort!,
       });
     } else {
       this.config.addServer({
         name: this.formName,
         ip: this.formIp,
-        port: this.formPort,
+        port: isUrl ? 0 : this.formPort!,
       });
     }
     this.cancelForm();

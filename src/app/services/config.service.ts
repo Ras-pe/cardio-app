@@ -52,13 +52,17 @@ export class ConfigService {
     return this.servers.find(s => s.active);
   }
 
+  private buildUrl(ip: string, port: number): string {
+    return ip.includes('://') ? ip : `http://${ip}:${port}`;
+  }
+
   getActiveUrl(): string {
     const active = this.getActiveServer();
-    return active ? `http://${active.ip}:${active.port}` : 'http://localhost:8000';
+    return active ? this.buildUrl(active.ip, active.port) : 'http://localhost:8000';
   }
 
   getAllUrls(): string[] {
-    return this.servers.map(s => `http://${s.ip}:${s.port}`);
+    return this.servers.map(s => this.buildUrl(s.ip, s.port));
   }
 
   setActive(id: number): void {
@@ -94,8 +98,9 @@ export class ConfigService {
 
   async testServer(ip: string, port: number): Promise<boolean> {
     try {
+      const url = ip.includes('://') ? ip : `http://${ip}:${port}`;
       const res = await lastValueFrom(
-        this.http.get(`http://${ip}:${port}/`).pipe(timeout(3000))
+        this.http.get(url + '/').pipe(timeout(3000))
       );
       return res !== null;
     } catch {
