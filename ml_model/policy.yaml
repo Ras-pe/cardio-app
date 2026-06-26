@@ -1,0 +1,12 @@
+on_http_request:
+  # Obligar a iniciar sesión con Google
+  - actions:
+      - type: oauth
+        config:
+          provider: google
+
+  # Permitir únicamente correos @acme.com
+  - expressions:
+      - "!actions.ngrok.oauth.identity.email.endsWith('@acme.com')"
+    actions:
+      - type: deny

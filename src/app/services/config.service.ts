@@ -38,8 +38,8 @@ export class ConfigService {
 
   private seed(): void {
     this.servers = [
-      { id: 1, name: 'Servidor principal', ip: 'localhost', port: 8000, active: true },
-      { id: 2, name: 'Servidor secundario', ip: '192.168.1.100', port: 8000, active: false },
+      { id: 1, name: 'Servidor remoto', ip: 'https://matha-strategic-ezekiel.ngrok-free.dev', port: 0, active: true },
+      { id: 2, name: 'Servidor local', ip: 'localhost', port: 8000, active: false },
     ];
     this.save();
   }
