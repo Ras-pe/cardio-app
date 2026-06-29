@@ -64,7 +64,7 @@
       </div>
 
       <div class="field-group">
-        <span class="field-label">Colesterol Sérica</span>
+        <span class="field-label">Colesterol Sérico</span>
         <ion-item>
           <ion-input type="number" formControlName="colesterol" placeholder="mg/dL — Ej: 200"></ion-input>
         </ion-item>
@@ -140,26 +140,6 @@
           </ion-select>
         </ion-item>
         <span class="field-hint">Pendiente del segmento ST durante el ejercicio máximo</span>
-      </div>
-
-      <div class="field-group">
-        <span class="field-label">Vasos Principales Coloreados</span>
-        <ion-item>
-          <ion-select formControlName="vasos_coloreados" placeholder="Seleccionar">
-            <ion-select-option *ngFor="let v of opcionesVasos" [value]="v.value">{{ v.label }}</ion-select-option>
-          </ion-select>
-        </ion-item>
-        <span class="field-hint">Número de vasos principales coloreados por fluoroscopia (0-4)</span>
-      </div>
-
-      <div class="field-group">
-        <span class="field-label">Talasemia</span>
-        <ion-item>
-          <ion-select formControlName="talasemia" placeholder="Seleccionar">
-            <ion-select-option *ngFor="let t of opcionesThal" [value]="t.value">{{ t.label }}</ion-select-option>
-          </ion-select>
-        </ion-item>
-        <span class="field-hint">Resultado de prueba de talasemia</span>
       </div>
     </div>
 

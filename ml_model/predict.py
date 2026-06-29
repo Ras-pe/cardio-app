@@ -1,7 +1,14 @@
 import numpy as np
 import joblib
 import os
+import warnings
 from typing import Dict, Any
+
+warnings.warn(
+    "ml_model (mi_model) is DEPRECATED. Use New_model/ instead with the new v2 API.",
+    DeprecationWarning,
+    stacklevel=2
+)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 

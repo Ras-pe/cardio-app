@@ -1,3 +1,6 @@
+import warnings
+warnings.warn("ml_model (mi_model) API is DEPRECATED. Use New_model/ instead (v2 API on port 8001).", DeprecationWarning)
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, field_validator
@@ -5,8 +8,8 @@ from predict import predict as ml_predict, FEATURE_DESCRIPTIONS
 import uvicorn
 
 app = FastAPI(
-    title="CardioApp - ML Prediction API",
-    description="API para predicción de riesgo de enfermedad cardíaca",
+    title="CardioApp - ML Prediction API [DEPRECATED]",
+    description="API para predicción de riesgo de enfermedad cardíaca (modelo v1 - OBSOLETO, usar New_model/)",
     version="1.0.0"
 )
 

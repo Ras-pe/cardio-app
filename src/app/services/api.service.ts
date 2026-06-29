@@ -3,20 +3,18 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, timeout, catchError, of } from 'rxjs';
 import { ConfigService } from './config.service';
 
-export interface HeartFeatures {
+export interface HeartFeaturesNew {
   age: number;
-  sex: number;
-  cp: number;
-  trestbps: number;
-  chol: number;
-  fbs: number;
-  restecg: number;
-  thalach: number;
-  exang: number;
+  sex: string;
+  chestPainType: string;
+  restingBP: number;
+  cholesterol: number;
+  fastingBS: number;
+  restingECG: string;
+  maxHR: number;
+  exerciseAngina: string;
   oldpeak: number;
-  slope: number;
-  ca: number;
-  thal: number;
+  stSlope: string;
 }
 
 export interface PredictionResult {
@@ -34,12 +32,12 @@ export class ApiService {
     private config: ConfigService,
   ) {}
 
-  predict(features: HeartFeatures): Observable<PredictionResult> {
+  predict(features: HeartFeaturesNew): Observable<PredictionResult> {
     const urls = this.config.getAllUrls();
     return this.tryPredict(urls, 0, features);
   }
 
-  private tryPredict(urls: string[], index: number, features: HeartFeatures): Observable<PredictionResult> {
+  private tryPredict(urls: string[], index: number, features: HeartFeaturesNew): Observable<PredictionResult> {
     if (index >= urls.length) {
       return of(null as unknown as PredictionResult);
     }
@@ -48,9 +46,7 @@ export class ApiService {
       timeout(5000),
       catchError(() => {
         if (index < urls.length - 1) {
-          const next = urls[index + 1];
-          const idx = urls.findIndex(u => u === next);
-          return this.tryPredict(urls, idx, features);
+          return this.tryPredict(urls, index + 1, features);
         }
         return of(null as unknown as PredictionResult);
       }),

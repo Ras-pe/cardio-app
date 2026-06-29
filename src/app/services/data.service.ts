@@ -14,18 +14,16 @@ export interface Evaluacion {
   nombre_paciente: string;
   telefono_paciente: string;
   edad: number;
-  sexo: number;
+  sexo: string;
   presion_arterial: number;
   colesterol: number;
   fc_maxima: number;
-  tipo_dolor_pecho: number;
+  tipo_dolor_pecho: string;
   ayunas_glucosa_alta: boolean;
-  ecg_reposo: number;
+  ecg_reposo: string;
   angina_ejercicio: boolean;
   depresion_st: number;
-  pendiente_st: number;
-  vasos_coloreados: number;
-  talasemia: number;
+  pendiente_st: string;
 }
 
 export interface PrediccionReport {
@@ -60,7 +58,6 @@ export class DataService {
     this.loadPredicciones();
   }
 
-  // --- Historial ---
   private loadHistory(): void {
     try {
       const raw = localStorage.getItem(this.HISTORY_KEY);
@@ -97,7 +94,6 @@ export class DataService {
     this.saveHistory();
   }
 
-  // --- Evaluaciones ---
   private loadEvaluaciones(): void {
     try {
       const raw = localStorage.getItem(this.EVAL_KEY);
@@ -128,7 +124,7 @@ export class DataService {
     else if (ev.edad > 45) score += 10;
     else if (ev.edad > 35) score += 5;
 
-    if (ev.sexo === 1) score += 5;
+    if (ev.sexo === 'M') score += 5;
 
     if (ev.presion_arterial > 140) score += 15;
     else if (ev.presion_arterial > 130) score += 10;
@@ -161,7 +157,6 @@ export class DataService {
     return 'medium';
   }
 
-  // --- Predicciones ---
   private loadPredicciones(): void {
     try {
       const raw = localStorage.getItem(this.PRED_KEY);

@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { DataService } from '../services/data.service';
-import { ApiService, HeartFeatures, PredictionResult } from '../services/api.service';
+import { ApiService, HeartFeaturesNew, PredictionResult } from '../services/api.service';
 import { ConfigService } from '../services/config.service';
 import { ResultadoPrediccionComponent } from '../resultado-prediccion/resultado-prediccion.component';
 
@@ -17,42 +17,27 @@ export class FormularioPage implements OnInit {
   submitting = false;
 
   sexos = [
-    { value: 0, label: 'Femenino' },
-    { value: 1, label: 'Masculino' },
+    { value: 'F', label: 'Femenino' },
+    { value: 'M', label: 'Masculino' },
   ];
 
   tiposDolor = [
-    { value: 0, label: 'Asintomático' },
-    { value: 1, label: 'Angina atípica' },
-    { value: 2, label: 'Dolor no anginal' },
-    { value: 3, label: 'Angina típica' },
+    { value: 'ATA', label: 'Angina típica' },
+    { value: 'NAP', label: 'Angina atípica' },
+    { value: 'ASY', label: 'Asintomático' },
+    { value: 'TA', label: 'Dolor no anginal' },
   ];
 
   tiposEcg = [
-    { value: 0, label: 'Normal' },
-    { value: 1, label: 'Anomalía ST-T' },
-    { value: 2, label: 'Hipertrofia ventricular izquierda' },
+    { value: 'Normal', label: 'Normal' },
+    { value: 'ST', label: 'Anomalía ST-T' },
+    { value: 'LVH', label: 'Hipertrofia ventricular izquierda' },
   ];
 
   pendientesSt = [
-    { value: 0, label: 'Ascendente' },
-    { value: 1, label: 'Plana' },
-    { value: 2, label: 'Descendente' },
-  ];
-
-  opcionesVasos = [
-    { value: 0, label: '0' },
-    { value: 1, label: '1' },
-    { value: 2, label: '2' },
-    { value: 3, label: '3' },
-    { value: 4, label: '4' },
-  ];
-
-  opcionesThal = [
-    { value: 0, label: 'Normal' },
-    { value: 1, label: 'Defecto fijo' },
-    { value: 2, label: 'Defecto reversible' },
-    { value: 3, label: 'No determinado' },
+    { value: 'Up', label: 'Ascendente' },
+    { value: 'Flat', label: 'Plana' },
+    { value: 'Down', label: 'Descendente' },
   ];
 
   constructor(
@@ -79,8 +64,6 @@ export class FormularioPage implements OnInit {
       ecg_reposo: [null, Validators.required],
       depresion_st: ['', [Validators.required, Validators.min(0), Validators.max(10)]],
       pendiente_st: [null, Validators.required],
-      vasos_coloreados: [null, Validators.required],
-      talasemia: [null, Validators.required],
     });
   }
 
@@ -90,37 +73,33 @@ export class FormularioPage implements OnInit {
       nombre_paciente: v.nombre_paciente?.trim() || '',
       telefono_paciente: v.telefono_paciente?.trim() || '',
       edad: Number(v.edad),
-      sexo: Number(v.sexo),
+      sexo: v.sexo,
       presion_arterial: Number(v.presion_arterial),
       colesterol: Number(v.colesterol),
       fc_maxima: Number(v.fc_maxima),
-      tipo_dolor_pecho: Number(v.tipo_dolor_pecho),
+      tipo_dolor_pecho: v.tipo_dolor_pecho,
       ayunas_glucosa_alta: !!v.ayunas_glucosa_alta,
-      ecg_reposo: Number(v.ecg_reposo),
+      ecg_reposo: v.ecg_reposo,
       angina_ejercicio: !!v.angina_ejercicio,
       depresion_st: Number(v.depresion_st),
-      pendiente_st: Number(v.pendiente_st),
-      vasos_coloreados: Number(v.vasos_coloreados),
-      talasemia: Number(v.talasemia),
+      pendiente_st: v.pendiente_st,
     };
   }
 
-  private formToHeartFeatures(): HeartFeatures {
+  private formToHeartFeatures(): HeartFeaturesNew {
     const v = this.form.value;
     return {
       age: Number(v.edad),
-      sex: Number(v.sexo),
-      cp: Number(v.tipo_dolor_pecho),
-      trestbps: Number(v.presion_arterial),
-      chol: Number(v.colesterol),
-      fbs: v.ayunas_glucosa_alta ? 1 : 0,
-      restecg: Number(v.ecg_reposo),
-      thalach: Number(v.fc_maxima),
-      exang: v.angina_ejercicio ? 1 : 0,
+      sex: v.sexo,
+      chestPainType: v.tipo_dolor_pecho,
+      restingBP: Number(v.presion_arterial),
+      cholesterol: Number(v.colesterol),
+      fastingBS: v.ayunas_glucosa_alta ? 1 : 0,
+      restingECG: v.ecg_reposo,
+      maxHR: Number(v.fc_maxima),
+      exerciseAngina: v.angina_ejercicio ? 'Y' : 'N',
       oldpeak: Number(v.depresion_st),
-      slope: Number(v.pendiente_st),
-      ca: Number(v.vasos_coloreados),
-      thal: Number(v.talasemia),
+      stSlope: v.pendiente_st,
     };
   }
 
