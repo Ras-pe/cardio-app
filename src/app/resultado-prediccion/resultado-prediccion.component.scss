@@ -199,6 +199,103 @@
   text-align: center;
 }
 
+.recommendation-section {
+  width: 100%;
+}
+
+.skeleton-card {
+  background: var(--cardio-card-bg, #f8f9fa);
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid var(--cardio-border);
+}
+
+.rec-card {
+  background: var(--cardio-card-bg, #f8f9fa);
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid var(--ion-color-primary);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rec-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--cardio-text);
+}
+
+.rec-header ion-icon {
+  font-size: 20px;
+}
+
+.rec-text {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--cardio-text);
+  margin: 0;
+}
+
+.urgency-badge {
+  align-self: flex-start;
+  padding: 4px 14px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.urgency-badge.urgency-inmediata {
+  background: var(--ion-color-danger);
+}
+
+.urgency-badge.urgency-pocas-horas {
+  background: var(--ion-color-warning);
+  color: #000;
+}
+
+.urgency-badge.urgency-ambulatoria {
+  background: var(--ion-color-success);
+}
+
+.rec-basis {
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--cardio-text-light);
+  margin: 0;
+  font-style: italic;
+}
+
+.rec-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.vault-tag {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--ion-color-primary);
+  font-weight: 500;
+}
+
+.vault-tag ion-icon {
+  font-size: 14px;
+}
+
+.action-btn {
+  font-size: 12px;
+  text-transform: none;
+}
+
 .button-section {
   width: 100%;
   padding-bottom: 16px;

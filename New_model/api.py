@@ -3,6 +3,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, field_validator
 from predict import predict as ml_predict, FEATURE_DESCRIPTIONS
 import uvicorn
+import os
+import httpx
+import json
 
 app = FastAPI(
     title="CardioApp - ML Prediction API v2",
@@ -72,6 +75,13 @@ class HeartDataNew(BaseModel):
             raise ValueError(f'Pendiente ST debe ser {", ".join(VALID_ST_SLOPE)}')
         return v
 
+class RecommendationRequest(BaseModel):
+    riskLevel: str = Field(..., description="Nivel de riesgo: low, moderate, critical")
+    riskScore: float = Field(..., ge=0, le=100, description="Score de riesgo porcentual")
+    detectedRhythm: str = Field(..., description="Ritmo cardíaco detectado")
+    troponinI: float = Field(..., ge=0, description="Nivel de Troponina I (ng/mL)")
+    confidence: float = Field(..., ge=0, le=100, description="Confianza del modelo ML")
+
 @app.get("/")
 def root():
     return {"message": "CardioApp ML API v2", "model": "Heart Failure Prediction", "status": "running"}
@@ -88,6 +98,102 @@ def predict_endpoint(data: HeartDataNew):
         return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/recommendation")
+async def get_recommendation(data: RecommendationRequest):
+    ollama_model = os.getenv("OLLAMA_MODEL")
+    if not ollama_model:
+        raise HTTPException(
+            status_code=400,
+            detail="Modelo LLM no configurado. Define OLLAMA_MODEL en variables de entorno."
+        )
+
+    try:
+        async with httpx.AsyncClient(timeout=5) as client:
+            await client.get("http://localhost:11434/api/tags")
+    except Exception:
+        raise HTTPException(
+            status_code=503,
+            detail="Servicio LLM no disponible. Verifica que Ollama esté corriendo."
+        )
+
+    obsidian_key = os.getenv("OBSIDIAN_API_KEY", "")
+    clinical_context = ""
+    source_is_vault = False
+
+    if obsidian_key:
+        try:
+            query = f"{data.detectedRhythm} {data.riskLevel} troponina {data.troponinI}"
+            async with httpx.AsyncClient(timeout=5) as client:
+                resp = await client.get(
+                    f"http://localhost:27123/search/simple/?query={query}&contextLength=500",
+                    headers={"Authorization": f"Bearer {obsidian_key}"}
+                )
+                if resp.status_code == 200:
+                    results = resp.json()
+                    contents = [r.get("content", "") for r in results[:3]]
+                    clinical_context = "\n---\n".join(contents)
+                    source_is_vault = bool(clinical_context.strip())
+        except Exception:
+            pass
+
+    prompt = f"""Eres un asistente clínico especializado en cardiología.
+Recibes el resultado de un modelo ML de diagnóstico cardíaco
+y fragmentos de guías clínicas recuperados de una base de conocimiento.
+Usa esos fragmentos como fundamento principal de tu recomendación.
+Si los fragmentos no son suficientes, complementa con guías ACC/AHA y ESC.
+Responde ÚNICAMENTE con un objeto JSON válido, sin texto adicional:
+{{
+  "recommendation": string,
+  "urgency": "inmediata" | "en pocas horas" | "ambulatoria",
+  "clinicalBasis": string,
+  "keyAction": string
+}}
+
+Resultado del modelo ML:
+- Nivel de riesgo: {data.riskLevel}
+- Score: {data.riskScore}%
+- Ritmo detectado: {data.detectedRhythm}
+- Troponina I: {data.troponinI} ng/mL
+- Confianza del modelo: {data.confidence}%
+
+Fragmentos clínicos del vault de Obsidian:
+{clinical_context}
+
+Genera la recomendación clínica."""
+
+    try:
+        async with httpx.AsyncClient(timeout=30) as client:
+            ollama_resp = await client.post(
+                "http://localhost:11434/api/generate",
+                json={
+                    "model": ollama_model,
+                    "prompt": prompt,
+                    "stream": False,
+                    "format": "json"
+                }
+            )
+            if ollama_resp.status_code != 200:
+                raise HTTPException(status_code=502, detail="Error en la respuesta del LLM.")
+
+            raw = ollama_resp.json().get("response", "")
+            raw = raw.strip()
+            if raw.startswith("```"):
+                lines = raw.split("\n", 1)
+                if len(lines) > 1:
+                    raw = lines[1]
+                if "```" in raw:
+                    raw = raw.rsplit("```", 1)[0]
+            raw = raw.strip()
+
+            result = json.loads(raw)
+            result["sourceIsVault"] = source_is_vault
+            return result
+
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=500, detail="Error al procesar la respuesta del LLM.")
+    except httpx.RequestError:
+        raise HTTPException(status_code=502, detail="Error en la respuesta del LLM.")
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8001)

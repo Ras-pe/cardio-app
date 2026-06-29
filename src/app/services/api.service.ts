@@ -25,6 +25,22 @@ export interface PredictionResult {
   risk_level: string;
 }
 
+export interface RecommendationRequest {
+  riskLevel: string;
+  riskScore: number;
+  detectedRhythm: string;
+  troponinI: number;
+  confidence: number;
+}
+
+export interface RecommendationResult {
+  recommendation: string;
+  urgency: string;
+  clinicalBasis: string;
+  keyAction: string;
+  sourceIsVault: boolean;
+}
+
 @Injectable({ providedIn: 'root' })
 export class ApiService {
   constructor(
@@ -56,6 +72,14 @@ export class ApiService {
   healthCheck(): Observable<any> {
     const urls = this.config.getAllUrls();
     return this.tryHealth(urls, 0);
+  }
+
+  getRecommendation(body: RecommendationRequest): Observable<RecommendationResult> {
+    const url = this.config.getActiveUrl();
+    return this.http.post<RecommendationResult>(`${url}/api/recommendation`, body).pipe(
+      timeout(30000),
+      catchError(() => of(null as unknown as RecommendationResult)),
+    );
   }
 
   private tryHealth(urls: string[], index: number): Observable<any> {
