@@ -10,7 +10,45 @@
 <ion-content>
   <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-content">
 
-    <!-- 1. Datos Generales -->
+    <!-- 1. ECG Image Upload -->
+    <div class="form-section">
+      <div class="form-section-header">
+        <ion-icon name="camera-outline" color="warning"></ion-icon>
+        <span>Interpretar ECG por Imagen</span>
+      </div>
+
+      <div class="field-group">
+        <span class="field-label">Sube o toma una foto del electrocardiograma</span>
+        <ion-item>
+          <input
+            type="file"
+            accept="image/*"
+            (change)="onEcgImageSelected($event)"
+            style="display: none"
+            #ecgFileInput
+          />
+          <ion-button
+            type="button"
+            expand="block"
+            fill="outline"
+            (click)="ecgFileInput.click()"
+            [disabled]="interpretingEcg"
+          >
+            <ion-icon slot="start" name="camera-outline"></ion-icon>
+            {{ interpretingEcg ? 'Interpretando...' : 'Seleccionar / Tomar Foto ECG' }}
+          </ion-button>
+        </ion-item>
+        <ion-spinner *ngIf="interpretingEcg" name="crescent" class="ecg-spinner"></ion-spinner>
+        <img
+          *ngIf="ecgImagePreview && !interpretingEcg"
+          [src]="ecgImagePreview"
+          class="ecg-preview"
+          alt="Vista previa del ECG"
+        />
+      </div>
+    </div>
+
+    <!-- 2. Datos Generales -->
     <div class="form-section">
       <div class="form-section-header">
         <ion-icon name="person-outline" color="primary"></ion-icon>
@@ -48,7 +86,7 @@
       </div>
     </div>
 
-    <!-- 2. Medidas Corporales -->
+    <!-- 3. Medidas Corporales -->
     <div class="form-section">
       <div class="form-section-header">
         <ion-icon name="fitness-outline" color="secondary"></ion-icon>
@@ -72,7 +110,10 @@
       </div>
 
       <div class="field-group">
-        <span class="field-label">Frecuencia Cardíaca Máxima</span>
+        <span class="field-label">
+          Frecuencia Cardíaca Máxima
+          <ion-badge *ngIf="autoFilledFields.includes('fc_maxima')" color="success" class="auto-fill-badge">Auto</ion-badge>
+        </span>
         <ion-item>
           <ion-input type="number" formControlName="fc_maxima" placeholder="bpm — Ej: 150"></ion-input>
         </ion-item>
@@ -85,7 +126,7 @@
       </ion-item>
     </div>
 
-    <!-- 3. ECG y Dolor -->
+    <!-- 4. ECG y Dolor -->
     <div class="form-section">
       <div class="form-section-header">
         <ion-icon name="pulse-outline" color="tertiary"></ion-icon>
@@ -107,7 +148,10 @@
       </ion-item>
 
       <div class="field-group">
-        <span class="field-label">ECG en Reposo</span>
+        <span class="field-label">
+          ECG en Reposo
+          <ion-badge *ngIf="autoFilledFields.includes('ecg_reposo')" color="success" class="auto-fill-badge">Auto</ion-badge>
+        </span>
         <ion-item>
           <ion-select formControlName="ecg_reposo" placeholder="Seleccionar">
             <ion-select-option *ngFor="let e of tiposEcg" [value]="e.value">{{ e.label }}</ion-select-option>
@@ -117,7 +161,10 @@
       </div>
 
       <div class="field-group">
-        <span class="field-label">Depresión del ST Inducida por Ejercicio</span>
+        <span class="field-label">
+          Depresión del ST Inducida por Ejercicio
+          <ion-badge *ngIf="autoFilledFields.includes('depresion_st')" color="success" class="auto-fill-badge">Auto</ion-badge>
+        </span>
         <ion-item>
           <ion-input type="number" step="0.1" formControlName="depresion_st" placeholder="Ej: 1.5"></ion-input>
         </ion-item>
@@ -125,7 +172,7 @@
       </div>
     </div>
 
-    <!-- 4. Resultados de Diagnóstico -->
+    <!-- 5. Resultados de Diagnóstico -->
     <div class="form-section">
       <div class="form-section-header">
         <ion-icon name="flask-outline" color="danger"></ion-icon>
@@ -133,7 +180,10 @@
       </div>
 
       <div class="field-group">
-        <span class="field-label">Pendiente del ST en Ejercicio Máximo</span>
+        <span class="field-label">
+          Pendiente del ST en Ejercicio Máximo
+          <ion-badge *ngIf="autoFilledFields.includes('pendiente_st')" color="success" class="auto-fill-badge">Auto</ion-badge>
+        </span>
         <ion-item>
           <ion-select formControlName="pendiente_st" placeholder="Seleccionar">
             <ion-select-option *ngFor="let p of pendientesSt" [value]="p.value">{{ p.label }}</ion-select-option>
@@ -150,44 +200,6 @@
         Predecir Riesgo Cardíaco
       </ng-container>
     </ion-button>
-
-    <!-- 5. ECG Image Upload -->
-    <div class="form-section">
-      <div class="form-section-header">
-        <ion-icon name="camera-outline" color="warning"></ion-icon>
-        <span>Interpretar ECG por Imagen</span>
-      </div>
-
-      <div class="field-group">
-        <span class="field-label">Sube o toma una foto del electrocardiograma</span>
-        <ion-item>
-          <input
-            type="file"
-            accept="image/*"
-            (change)="onEcgImageSelected($event)"
-            style="display: none"
-            #ecgFileInput
-          />
-          <ion-button
-            type="button"
-            expand="block"
-            fill="outline"
-            (click)="ecgFileInput.click()"
-            [disabled]="interpretingEcg"
-          >
-            <ion-icon slot="start" name="camera-outline"></ion-icon>
-            {{ interpretingEcg ? 'Interpretando...' : 'Seleccionar / Tomar Foto ECG' }}
-          </ion-button>
-        </ion-item>
-        <ion-spinner *ngIf="interpretingEcg" name="crescent" class="ecg-spinner"></ion-spinner>
-        <img
-          *ngIf="ecgImagePreview && !interpretingEcg"
-          [src]="ecgImagePreview"
-          class="ecg-preview"
-          alt="Vista previa del ECG"
-        />
-      </div>
-    </div>
 
   </form>
 </ion-content>

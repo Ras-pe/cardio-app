@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ModalController } from '@ionic/angular';
+import { ModalController, ToastController } from '@ionic/angular';
 import { DataService } from '../services/data.service';
 import { ApiService, HeartFeaturesNew, PredictionResult, EcgInterpretation } from '../services/api.service';
 import { ConfigService } from '../services/config.service';
@@ -17,6 +17,14 @@ export class FormularioPage implements OnInit {
   submitting = false;
   interpretingEcg = false;
   ecgImagePreview: string | null = null;
+  autoFilledFields: string[] = [];
+
+  private readonly fieldLabels: Record<string, string> = {
+    ecg_reposo: 'ECG en Reposo',
+    fc_maxima: 'Frecuencia Cardíaca Máxima',
+    depresion_st: 'Depresión del ST',
+    pendiente_st: 'Pendiente del ST',
+  };
 
   sexos = [
     { value: 'F', label: 'Femenino' },
@@ -46,6 +54,7 @@ export class FormularioPage implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private modalCtrl: ModalController,
+    private toastCtrl: ToastController,
     private dataService: DataService,
     private apiService: ApiService,
     private config: ConfigService,
@@ -113,9 +122,26 @@ export class FormularioPage implements OnInit {
     const reader = new FileReader();
 
     reader.onload = () => {
-      const base64 = (reader.result as string).split(',')[1];
-      this.ecgImagePreview = reader.result as string;
-      this.sendEcgForInterpretation(base64);
+      this.autoFilledFields = [];
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let { width, height } = img;
+        const maxDim = 1200;
+        if (width > maxDim || height > maxDim) {
+          const ratio = maxDim / Math.max(width, height);
+          width *= ratio;
+          height *= ratio;
+        }
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d')!;
+        ctx.drawImage(img, 0, 0, width, height);
+        const compressed = canvas.toDataURL('image/jpeg', 0.85);
+        this.ecgImagePreview = compressed;
+        this.sendEcgForInterpretation(compressed.split(',')[1]);
+      };
+      img.src = reader.result as string;
     };
 
     reader.readAsDataURL(file);
@@ -140,22 +166,30 @@ export class FormularioPage implements OnInit {
 
   private applyEcgInterpretation(result: EcgInterpretation): void {
     const patch: any = {};
+    const filled: string[] = [];
 
-    if (result.age !== null) patch.edad = result.age;
-    if (result.sex !== null) patch.sexo = result.sex;
-    if (result.chestPainType !== null) patch.tipo_dolor_pecho = result.chestPainType;
-    if (result.restingBP !== null) patch.presion_arterial = result.restingBP;
-    if (result.cholesterol !== null) patch.colesterol = result.cholesterol;
-    if (result.fastingBS !== null) patch.ayunas_glucosa_alta = result.fastingBS === 1;
-    if (result.restingECG !== null) patch.ecg_reposo = result.restingECG;
-    if (result.maxHR !== null) patch.fc_maxima = result.maxHR;
-    if (result.exerciseAngina !== null) patch.angina_ejercicio = result.exerciseAngina === 'Y';
-    if (result.oldpeak !== null) patch.depresion_st = result.oldpeak;
-    if (result.stSlope !== null) patch.pendiente_st = result.stSlope;
+    if (result.restingECG !== null) { patch.ecg_reposo = result.restingECG; filled.push('ecg_reposo'); }
+    if (result.maxHR !== null) { patch.fc_maxima = result.maxHR; filled.push('fc_maxima'); }
+    if (result.oldpeak !== null) { patch.depresion_st = result.oldpeak; filled.push('depresion_st'); }
+    if (result.stSlope !== null) { patch.pendiente_st = result.stSlope; filled.push('pendiente_st'); }
 
-    if (Object.keys(patch).length > 0) {
+    if (filled.length > 0) {
       this.form.patchValue(patch);
+      this.autoFilledFields = filled;
+      this.showAutoFillToast(filled);
     }
+  }
+
+  private async showAutoFillToast(fields: string[]): Promise<void> {
+    const names = fields.map(f => this.fieldLabels[f] || f);
+    const toast = await this.toastCtrl.create({
+      message: `Datos auto-completados desde la imagen: ${names.join(', ')}`,
+      duration: 5000,
+      color: 'success',
+      position: 'bottom',
+      buttons: [{ text: 'OK', role: 'cancel' }],
+    });
+    await toast.present();
   }
 
   async onSubmit() {

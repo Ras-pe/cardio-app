@@ -7,7 +7,34 @@ import os
 import httpx
 import json
 import base64
+import io
+from PIL import Image, ImageEnhance, ImageOps
 from dotenv import load_dotenv
+
+
+def preprocess_ecg_image(base64_str: str) -> str:
+    image_data = base64.b64decode(base64_str)
+    img = Image.open(io.BytesIO(image_data))
+
+    img = img.convert("L")
+
+    img = ImageOps.autocontrast(img, cutoff=5)
+
+    enhancer = ImageEnhance.Sharpness(img)
+    img = enhancer.enhance(2.0)
+
+    enhancer = ImageEnhance.Contrast(img)
+    img = enhancer.enhance(1.5)
+
+    max_dim = 1200
+    if max(img.size) > max_dim:
+        ratio = max_dim / max(img.size)
+        new_size = (int(img.size[0] * ratio), int(img.size[1] * ratio))
+        img = img.resize(new_size, Image.LANCZOS)
+
+    buf = io.BytesIO()
+    img.save(buf, format="PNG")
+    return base64.b64encode(buf.getvalue()).decode()
 
 load_dotenv(os.path.join(os.path.dirname(__file__), ".env"))
 
@@ -90,15 +117,8 @@ class EcgInterpretationRequest(BaseModel):
     image: str = Field(..., description="Imagen de ECG en base64")
 
 class EcgInterpretationResponse(BaseModel):
-    age: float | None = None
-    sex: str | None = None
-    chestPainType: str | None = None
-    restingBP: float | None = None
-    cholesterol: float | None = None
-    fastingBS: int | None = None
     restingECG: str | None = None
     maxHR: float | None = None
-    exerciseAngina: str | None = None
     oldpeak: float | None = None
     stSlope: str | None = None
     rhythm: str | None = None
@@ -171,6 +191,11 @@ async def interpret_ecg(data: EcgInterpretationRequest):
                 clinical_context = f.read()
 
     try:
+        processed_image = preprocess_ecg_image(data.image)
+    except Exception:
+        processed_image = data.image
+
+    try:
         async with httpx.AsyncClient(timeout=60) as client:
             vision_resp = await client.post(
                 "http://localhost:11434/api/generate",
@@ -186,7 +211,7 @@ async def interpret_ecg(data: EcgInterpretationRequest):
                         "IMPORTANTE: distingue entre lo que ves en el trazado del ECG "
                         "y lo que aparece como texto/anotaciones en la imagen."
                     ),
-                    "images": [data.image],
+                    "images": [processed_image],
                     "stream": False
                 }
             )
@@ -202,32 +227,27 @@ async def interpret_ecg(data: EcgInterpretationRequest):
 {f"Contexto clínico de referencia:\n{clinical_context}\n" if clinical_context else ""}
 
 REGLAS ESTRICTAS (violar estas reglas causa daño al paciente):
-1. **sex**: NO se puede determinar viendo un ECG. Pon null a menos que el texto en la imagen lo especifique explícitamente ("Male"/"Female", "Varón"/"Mujer").
-2. **chestPainType**: NO se puede determinar viendo un ECG. Pon null a menos que el texto en la imagen lo especifique.
-3. **age**, **restingBP**, **cholesterol**, **fastingBS**, **exerciseAngina**: NO son visibles en un trazado ECG. Pon null a menos que aparezcan como texto en la imagen.
-4. **rhythm**, **maxHR**, **restingECG**, **oldpeak**, **stSlope**: SÍ pueden determinarse del trazado. Extráelos si es posible.
+1. Solo extrae datos que se puedan determinar DIRECTAMENTE del trazado eléctrico del ECG.
+2. **maxHR** (frecuencia cardíaca): SÍ se mide del intervalo RR.
+3. **restingECG** (clasificación): SÍ se determina del trazado: "Normal", "ST" (anomalía ST-T), "LVH" (hipertrofia ventricular izquierda) o null.
+4. **oldpeak** (depresión del ST): SÍ se mide en mm desde el trazado.
+5. **stSlope** (pendiente del ST): SÍ se ve en el trazado: "Up", "Flat", "Down" o null.
+6. **rhythm** (ritmo cardíaco): SÍ se clasifica del trazado: ej. "Sinusal", "Bradicardia sinusal", "FA", "Aleteo auricular", "TV", etc.
+7. Los siguientes NO están en el trazado del ECG y DEBEN ser null SIEMPRE: age, sex, chestPainType, restingBP, cholesterol, fastingBS, exerciseAngina.
 
 NO INVENTES NADA. NULL > DATO INCORRECTO.
 
 Responde ÚNICAMENTE con un objeto JSON válido, sin texto adicional:
 {{
-  "age": null,
-  "sex": null,
-  "chestPainType": null,
-  "restingBP": null,
-  "cholesterol": null,
-  "fastingBS": null,
   "restingECG": "Normal" | "ST" | "LVH" | null,
   "maxHR": número | null,
-  "exerciseAngina": null,
   "oldpeak": número | null,
   "stSlope": "Up" | "Flat" | "Down" | null,
-  "rhythm": string (ritmo cardíaco: ej. "Sinusal", "Bradicardia sinusal", "FA", "TA", "TV", etc.) | null,
+  "rhythm": string | null,
   "confidence": número (0-100, qué tan seguro estás de esta interpretación)
 }}
 
-NOTA: "ST" en restingECG significa "anomalía ST" (no ritmo sinusal).
-"ST" en rhythm no es un ritmo válido. Usa nombres como "Sinusal", "FA", "Aleteo auricular", "TV", etc."""
+NOTA: "ST" en restingECG significa "anomalía ST-T". Para rhythm usa nombres como "Sinusal", "FA", "Aleteo auricular", "TV", etc."""
 
             llm_resp = await client.post(
                 "http://localhost:11434/api/generate",

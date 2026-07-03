@@ -42,15 +42,8 @@ export interface RecommendationResult {
 }
 
 export interface EcgInterpretation {
-  age: number | null;
-  sex: string | null;
-  chestPainType: string | null;
-  restingBP: number | null;
-  cholesterol: number | null;
-  fastingBS: number | null;
   restingECG: string | null;
   maxHR: number | null;
-  exerciseAngina: string | null;
   oldpeak: number | null;
   stSlope: string | null;
   rhythm: string | null;

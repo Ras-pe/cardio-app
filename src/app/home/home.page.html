@@ -41,6 +41,10 @@
       <ion-icon slot="start" name="settings-outline"></ion-icon>
       Configuración
     </ion-button>
+    <ion-button expand="block" fill="outline" color="tertiary" class="action-btn" (click)="testConnection()" [disabled]="testing">
+      <ion-icon slot="start" name="server-outline"></ion-icon>
+      {{ testing ? 'Probando...' : 'Probar Conexión al Servidor' }}
+    </ion-button>
   </div>
 
   <div class="info-card cardio-card">
