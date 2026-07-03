@@ -1,0 +1,8 @@
+{
+  "enabledPlugins": [
+    "obsidian-local-rest-api"
+  ],
+  "promptDelete": false,
+  "newFileLocation": "root",
+  "attachmentFolderPath": "./"
+}
