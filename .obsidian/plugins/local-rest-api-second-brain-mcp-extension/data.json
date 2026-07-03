@@ -1,0 +1,14 @@
+{
+  "modelName": "Xenova/all-MiniLM-L6-v2",
+  "customModelName": "",
+  "cachedModelName": "Xenova/all-MiniLM-L6-v2",
+  "returnDiagnosticLogs": false,
+  "wikiPurpose": "",
+  "allowedPathPatterns": [
+    "^wiki/"
+  ],
+  "excludedPathPatterns": [
+    "^wiki/index\\.md$",
+    "^wiki/log\\.md$"
+  ]
+}

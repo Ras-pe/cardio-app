@@ -1,0 +1,9 @@
+{
+  "apiKey": "lExMbtL77m6AR_OZIFTebdbjcRkMmk2KzSCNn7WKD-w",
+  "port": 27123,
+  "portHttps": 27124,
+  "bindAddress": "127.0.0.1",
+  "httpsEnabled": false,
+  "corsOrigins": ["http://localhost:8000", "http://localhost:4200", "capacitor://localhost"],
+  "logging": false
+}

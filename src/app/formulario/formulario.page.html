@@ -151,5 +151,43 @@
       </ng-container>
     </ion-button>
 
+    <!-- 5. ECG Image Upload -->
+    <div class="form-section">
+      <div class="form-section-header">
+        <ion-icon name="camera-outline" color="warning"></ion-icon>
+        <span>Interpretar ECG por Imagen</span>
+      </div>
+
+      <div class="field-group">
+        <span class="field-label">Sube o toma una foto del electrocardiograma</span>
+        <ion-item>
+          <input
+            type="file"
+            accept="image/*"
+            (change)="onEcgImageSelected($event)"
+            style="display: none"
+            #ecgFileInput
+          />
+          <ion-button
+            type="button"
+            expand="block"
+            fill="outline"
+            (click)="ecgFileInput.click()"
+            [disabled]="interpretingEcg"
+          >
+            <ion-icon slot="start" name="camera-outline"></ion-icon>
+            {{ interpretingEcg ? 'Interpretando...' : 'Seleccionar / Tomar Foto ECG' }}
+          </ion-button>
+        </ion-item>
+        <ion-spinner *ngIf="interpretingEcg" name="crescent" class="ecg-spinner"></ion-spinner>
+        <img
+          *ngIf="ecgImagePreview && !interpretingEcg"
+          [src]="ecgImagePreview"
+          class="ecg-preview"
+          alt="Vista previa del ECG"
+        />
+      </div>
+    </div>
+
   </form>
 </ion-content>

@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { DataService } from '../services/data.service';
-import { ApiService, HeartFeaturesNew, PredictionResult } from '../services/api.service';
+import { ApiService, HeartFeaturesNew, PredictionResult, EcgInterpretation } from '../services/api.service';
 import { ConfigService } from '../services/config.service';
 import { ResultadoPrediccionComponent } from '../resultado-prediccion/resultado-prediccion.component';
 
@@ -15,6 +15,8 @@ import { ResultadoPrediccionComponent } from '../resultado-prediccion/resultado-
 export class FormularioPage implements OnInit {
   form!: FormGroup;
   submitting = false;
+  interpretingEcg = false;
+  ecgImagePreview: string | null = null;
 
   sexos = [
     { value: 'F', label: 'Femenino' },
@@ -101,6 +103,59 @@ export class FormularioPage implements OnInit {
       oldpeak: Number(v.depresion_st),
       stSlope: v.pendiente_st,
     };
+  }
+
+  onEcgImageSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input.files?.length) return;
+
+    const file = input.files[0];
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const base64 = (reader.result as string).split(',')[1];
+      this.ecgImagePreview = reader.result as string;
+      this.sendEcgForInterpretation(base64);
+    };
+
+    reader.readAsDataURL(file);
+    input.value = '';
+  }
+
+  private sendEcgForInterpretation(base64: string): void {
+    this.interpretingEcg = true;
+
+    this.apiService.interpretEcg(base64).subscribe({
+      next: (result) => {
+        this.interpretingEcg = false;
+        if (result && result.confidence !== null) {
+          this.applyEcgInterpretation(result);
+        }
+      },
+      error: () => {
+        this.interpretingEcg = false;
+      },
+    });
+  }
+
+  private applyEcgInterpretation(result: EcgInterpretation): void {
+    const patch: any = {};
+
+    if (result.age !== null) patch.edad = result.age;
+    if (result.sex !== null) patch.sexo = result.sex;
+    if (result.chestPainType !== null) patch.tipo_dolor_pecho = result.chestPainType;
+    if (result.restingBP !== null) patch.presion_arterial = result.restingBP;
+    if (result.cholesterol !== null) patch.colesterol = result.cholesterol;
+    if (result.fastingBS !== null) patch.ayunas_glucosa_alta = result.fastingBS === 1;
+    if (result.restingECG !== null) patch.ecg_reposo = result.restingECG;
+    if (result.maxHR !== null) patch.fc_maxima = result.maxHR;
+    if (result.exerciseAngina !== null) patch.angina_ejercicio = result.exerciseAngina === 'Y';
+    if (result.oldpeak !== null) patch.depresion_st = result.oldpeak;
+    if (result.stSlope !== null) patch.pendiente_st = result.stSlope;
+
+    if (Object.keys(patch).length > 0) {
+      this.form.patchValue(patch);
+    }
   }
 
   async onSubmit() {

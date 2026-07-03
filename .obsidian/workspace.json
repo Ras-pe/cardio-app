@@ -1,0 +1,211 @@
+{
+  "main": {
+    "id": "16ca138cb639fc28",
+    "type": "split",
+    "children": [
+      {
+        "id": "76821d1a8ef7ba8a",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "62c32d14807c7c2b",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "obsidian_vault/Referencia ECG.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Referencia ECG"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "aec57473103bd6d3",
+    "type": "split",
+    "children": [
+      {
+        "id": "57e2e7679947b59f",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "dfe846ca024a6710",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "5a540c71a94fd8d9",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "f0b736721c184f3a",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "c6c7ed38d43b1add",
+    "type": "split",
+    "children": [
+      {
+        "id": "3b393c27d71f01b6",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "6c2496aa6c6d29a6",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Untitled.canvas",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for Untitled"
+            }
+          },
+          {
+            "id": "1c09bfaac13ed49c",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Untitled.canvas",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from Untitled"
+            }
+          },
+          {
+            "id": "c89d35dffac1c982",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "0c5de4435fdd06cb",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "a6f887a208820484",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Untitled.canvas",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of Untitled"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "62c32d14807c7c2b",
+  "lastOpenFiles": [
+    "obsidian_vault/Casos Clínicos.md",
+    "Untitled.canvas",
+    "ml_model/referencia_clinica.md",
+    "ml_model/__pycache__/predict.cpython-314.pyc",
+    "ml_model/__pycache__/api.cpython-314.pyc",
+    "ml_model/__pycache__",
+    "www/index.html",
+    "www/assets/icons/icon-96.webp",
+    "www/assets/icons/icon-72.webp",
+    "www/assets/icons/icon-512.webp",
+    "www/assets/icons/icon-48.webp",
+    "www/assets/icons/icon-256.webp",
+    "www/assets/icons/icon-192.webp",
+    "www/assets/icons/icon-128.webp",
+    "www/assets/thumbnail.png",
+    "www/assets/icons",
+    "www/assets/icon.png",
+    "www/assets",
+    "www/3rdpartylicenses.txt",
+    "www/common.js",
+    "www/9359.js",
+    "www/7578.js"
+  ]
+}
