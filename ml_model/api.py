@@ -112,6 +112,8 @@ class RecommendationRequest(BaseModel):
     detectedRhythm: str = Field(..., description="Ritmo cardíaco detectado")
     troponinI: float = Field(..., ge=0, description="Nivel de Troponina I (ng/mL)")
     confidence: float = Field(..., ge=0, le=100, description="Confianza del modelo ML")
+    presionSistolica: float = Field(0, ge=0, le=300, description="Presión arterial sistólica en reposo (mm Hg)")
+    presionDiastolica: float = Field(0, ge=0, le=200, description="Presión arterial diastólica en reposo (mm Hg)")
 
 class EcgInterpretationRequest(BaseModel):
     image: str = Field(..., description="Imagen de ECG en base64")
@@ -336,6 +338,8 @@ Resultado del modelo ML:
 - Ritmo detectado: {data.detectedRhythm}
 - Troponina I: {data.troponinI} ng/mL
 - Confianza del modelo: {data.confidence}%
+- Presión arterial sistólica: {data.presionSistolica} mmHg
+- Presión arterial diastólica: {data.presionDiastolica} mmHg
 
 Fragmentos clínicos del vault de Obsidian:
 {clinical_context}

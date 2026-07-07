@@ -1,55 +1,127 @@
-.welcome-section {
-  padding: 24px 20px 8px;
+.hero {
+  position: relative;
+  text-align: center;
+  padding: 32px 20px 24px;
+  overflow: hidden;
 
-  h1 {
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--cardio-text);
-    margin: 0 0 6px;
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(160deg, rgba(37, 99, 235, 0.06) 0%, rgba(8, 145, 178, 0.04) 100%);
+    z-index: 0;
   }
 
-  p {
-    font-size: 14px;
-    color: var(--cardio-text-light);
-    margin: 0;
+  > * {
+    position: relative;
+    z-index: 1;
   }
 }
 
-.action-buttons {
-  padding: 0 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+.app-logo {
+  width: 88px;
+  height: 88px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+  object-fit: contain;
+  box-shadow: 0 4px 20px rgba(37, 99, 235, 0.2);
 }
 
-.action-btn {
-  --border-radius: 12px;
-  height: 50px;
-  font-weight: 600;
-  font-size: 15px;
+.hero h1 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--cardio-text);
+  margin: 0 0 6px;
+  letter-spacing: -0.3px;
+}
+
+.hero p {
+  font-size: 14px;
+  color: var(--cardio-text-light);
   margin: 0;
 }
 
-.logout-btn {
-  --color: rgba(255, 255, 255, 0.9);
-  font-size: 13px;
-  font-weight: 600;
-  --padding-start: 10px;
-  --padding-end: 10px;
-  --padding-top: 6px;
-  --padding-bottom: 6px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.12);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
-  --border-width: 0;
+// 2-column action grid
+.actions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 0 16px;
+  margin-bottom: 8px;
+}
+
+.grid-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--cardio-card-bg);
+  border-radius: 16px;
+  padding: 20px 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  -webkit-user-select: none;
+  user-select: none;
+
+  &:active {
+    transform: scale(0.96);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  }
 
   ion-icon {
-    font-size: 18px;
+    font-size: 28px;
+    color: var(--cardio-primary);
+  }
+
+  span {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--cardio-text);
+    text-align: center;
+    line-height: 1.2;
+  }
+
+  &.primary {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    padding: 18px 20px;
+    background: linear-gradient(135deg, var(--cardio-gradient-start), var(--cardio-gradient-end));
+    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3);
+
+    ion-icon {
+      font-size: 24px;
+      color: white;
+    }
+
+    span {
+      font-size: 16px;
+      color: white;
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+
+  &.accent {
+    ion-icon {
+      color: var(--cardio-accent);
+    }
+  }
+
+  &.testing ion-icon {
+    animation: spin 1s linear infinite;
   }
 }
 
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
 .info-card {
-  margin: 20px 16px 24px;
+  margin: 16px 16px 24px;
   padding: 16px;
 
   .info-header {
@@ -67,5 +139,22 @@
     color: var(--cardio-text-light);
     line-height: 1.5;
     margin: 0;
+  }
+}
+
+.logout-btn {
+  --color: rgba(255, 255, 255, 0.9);
+  font-size: 13px;
+  font-weight: 600;
+  --padding-start: 10px;
+  --padding-end: 10px;
+  --padding-top: 6px;
+  --padding-bottom: 6px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.12);
+  --border-width: 0;
+
+  ion-icon {
+    font-size: 18px;
   }
 }

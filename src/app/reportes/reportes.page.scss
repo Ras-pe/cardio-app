@@ -1,11 +1,12 @@
-.header-section {
-  padding: 24px 20px 8px;
+.page-header {
+  padding: env(safe-area-inset-top, 20px) 20px 8px;
 
   h1 {
-    font-size: 24px;
+    font-size: 26px;
     font-weight: 700;
     color: var(--cardio-text);
-    margin: 0 0 6px;
+    margin: 0 0 4px;
+    letter-spacing: -0.3px;
   }
 
   p {
@@ -15,56 +16,42 @@
   }
 }
 
-.table-wrapper {
+.reportes-list {
+  padding: 0 16px 24px;
+}
+
+.reporte-card {
+  margin-bottom: 12px;
   padding: 16px;
-  overflow-x: auto;
+  border-radius: 14px;
 }
 
-.reporte-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 13px;
+.reporte-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
 
-  th {
-    text-align: left;
-    padding: 10px 12px;
-    font-weight: 700;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: var(--cardio-text-light);
-    border-bottom: 2px solid var(--cardio-border);
-    white-space: nowrap;
+.reporte-paciente {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  ion-icon {
+    font-size: 18px;
   }
 
-  td {
-    padding: 12px;
-    border-bottom: 1px solid var(--cardio-border);
-    vertical-align: middle;
+  span {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--cardio-text);
   }
-
-  tbody tr:hover {
-    background: rgba(0, 0, 0, 0.02);
-  }
-}
-
-.cell-fecha {
-  white-space: nowrap;
-  font-weight: 500;
-}
-
-.cell-paciente {
-  font-weight: 600;
-}
-
-.cell-telefono {
-  white-space: nowrap;
-  color: var(--cardio-text-light);
 }
 
 .result-label {
   display: inline-block;
-  padding: 3px 10px;
+  padding: 3px 12px;
   border-radius: 20px;
   font-size: 12px;
   font-weight: 600;
@@ -81,9 +68,35 @@
   }
 }
 
+.reporte-meta {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+
+  span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: var(--cardio-text-light);
+
+    ion-icon {
+      font-size: 14px;
+    }
+  }
+}
+
+.reporte-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
 .risk-badge {
   display: inline-block;
-  padding: 3px 10px;
+  padding: 4px 12px;
   border-radius: 20px;
   color: #fff;
   font-size: 12px;
@@ -108,29 +121,5 @@
   &.local {
     background: #fef3c7;
     color: #d97706;
-  }
-}
-
-.empty-state {
-  text-align: center;
-  padding: 60px 20px;
-
-  ion-icon {
-    font-size: 64px;
-    color: var(--cardio-text-light);
-    opacity: 0.4;
-  }
-
-  h2 {
-    font-size: 20px;
-    font-weight: 600;
-    color: var(--cardio-text);
-    margin: 12px 0 4px;
-  }
-
-  p {
-    font-size: 14px;
-    color: var(--cardio-text-light);
-    margin: 0;
   }
 }

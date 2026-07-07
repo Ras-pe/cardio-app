@@ -1,15 +1,27 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
+export type UserRole = 'admin' | 'user';
+
 export interface AuthToken {
   token: string;
   email: string;
+  role: UserRole;
   expiresAt: number;
 }
 
 export interface RegisteredUser {
   email: string;
   password: string;
+  nombre: string;
+  role: UserRole;
+  activo: boolean;
+  fechaCreacion: string;
+}
+
+export interface PasswordValidation {
+  valid: boolean;
+  errors: string[];
 }
 
 @Injectable({
@@ -22,8 +34,8 @@ export class AuthService {
   private readonly TOKEN_DURATION = 3600000;
 
   private static readonly SEED_USERS: RegisteredUser[] = [
-    { email: 'admin@test.com', password: '123456' },
-    { email: 'user@test.com', password: 'password' },
+    { email: 'admin@test.com', password: 'Admin@123', nombre: 'Administrador', role: 'admin', activo: true, fechaCreacion: '2026-01-01' },
+    { email: 'user@test.com', password: 'User@123', nombre: 'Usuario Demo', role: 'user', activo: true, fechaCreacion: '2026-01-01' },
   ];
 
   constructor(private router: Router) {
@@ -47,10 +59,15 @@ export class AuthService {
       return { success: false, error: 'Credenciales inválidas. Verifica tu correo y contraseña.' };
     }
 
+    if (!user.activo) {
+      return { success: false, error: 'Tu cuenta está desactivada. Contacta al administrador.' };
+    }
+
     const token = this.generateToken();
     const authData: AuthToken = {
       token,
       email: user.email,
+      role: user.role,
       expiresAt: Date.now() + this.TOKEN_DURATION,
     };
 
@@ -60,24 +77,81 @@ export class AuthService {
     return { success: true };
   }
 
-  async register(email: string, password: string): Promise<{ success: boolean; error?: string }> {
+  async createUser(data: { email: string; password: string; nombre: string; role: UserRole }): Promise<{ success: boolean; error?: string }> {
     await this.simulateDelay();
 
-    if (!email || !password) {
-      return { success: false, error: 'Correo y contraseña son obligatorios.' };
+    if (!data.email || !data.password || !data.nombre) {
+      return { success: false, error: 'Todos los campos son obligatorios.' };
+    }
+
+    const passwordValidation = this.validatePassword(data.password);
+    if (!passwordValidation.valid) {
+      return { success: false, error: passwordValidation.errors.join('. ') + '.' };
     }
 
     const users = this.getUsers();
-    const exists = users.some(u => u.email.toLowerCase() === email.toLowerCase());
-
+    const exists = users.some(u => u.email.toLowerCase() === data.email.toLowerCase());
     if (exists) {
-      return { success: false, error: 'Este correo ya está registrado. Intenta con otro.' };
+      return { success: false, error: 'Este correo ya está registrado.' };
     }
 
-    users.push({ email: email.toLowerCase(), password });
+    const newUser: RegisteredUser = {
+      email: data.email.toLowerCase(),
+      password: data.password,
+      nombre: data.nombre.trim(),
+      role: data.role,
+      activo: true,
+      fechaCreacion: new Date().toISOString().split('T')[0],
+    };
+
+    users.push(newUser);
     localStorage.setItem(this.USERS_KEY, JSON.stringify(users));
 
     return { success: true };
+  }
+
+  async updateUser(email: string, data: Partial<Pick<RegisteredUser, 'nombre' | 'role' | 'activo'>>): Promise<{ success: boolean; error?: string }> {
+    await this.simulateDelay();
+
+    const users = this.getUsers();
+    const index = users.findIndex(u => u.email.toLowerCase() === email.toLowerCase());
+    if (index === -1) {
+      return { success: false, error: 'Usuario no encontrado.' };
+    }
+
+    if (data.nombre !== undefined) users[index].nombre = data.nombre.trim();
+    if (data.role !== undefined) users[index].role = data.role;
+    if (data.activo !== undefined) users[index].activo = data.activo;
+
+    localStorage.setItem(this.USERS_KEY, JSON.stringify(users));
+    return { success: true };
+  }
+
+  async changePassword(email: string, newPassword: string): Promise<{ success: boolean; error?: string }> {
+    await this.simulateDelay();
+
+    const passwordValidation = this.validatePassword(newPassword);
+    if (!passwordValidation.valid) {
+      return { success: false, error: passwordValidation.errors.join('. ') + '.' };
+    }
+
+    const users = this.getUsers();
+    const index = users.findIndex(u => u.email.toLowerCase() === email.toLowerCase());
+    if (index === -1) {
+      return { success: false, error: 'Usuario no encontrado.' };
+    }
+
+    users[index].password = newPassword;
+    localStorage.setItem(this.USERS_KEY, JSON.stringify(users));
+    return { success: true };
+  }
+
+  deleteUser(email: string): boolean {
+    const users = this.getUsers();
+    const filtered = users.filter(u => u.email.toLowerCase() !== email.toLowerCase());
+    if (filtered.length === users.length) return false;
+    localStorage.setItem(this.USERS_KEY, JSON.stringify(filtered));
+    return true;
   }
 
   logout(): void {
@@ -101,6 +175,15 @@ export class AuthService {
     return session?.email ?? '';
   }
 
+  getUserRole(): UserRole {
+    const session = this.getSession();
+    return session?.role ?? 'user';
+  }
+
+  isAdmin(): boolean {
+    return this.getUserRole() === 'admin';
+  }
+
   getToken(): string | null {
     return localStorage.getItem(this.TOKEN_KEY);
   }
@@ -116,6 +199,32 @@ export class AuthService {
     }
   }
 
+  getUserByEmail(email: string): RegisteredUser | undefined {
+    return this.getUsers().find(u => u.email.toLowerCase() === email.toLowerCase());
+  }
+
+  validatePassword(password: string): PasswordValidation {
+    const errors: string[] = [];
+
+    if (password.length < 8) {
+      errors.push('Mínimo 8 caracteres');
+    }
+    if (!/[A-Z]/.test(password)) {
+      errors.push('Al menos una mayúscula');
+    }
+    if (!/[a-z]/.test(password)) {
+      errors.push('Al menos una minúscula');
+    }
+    if (!/[0-9]/.test(password)) {
+      errors.push('Al menos un número');
+    }
+    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]/.test(password)) {
+      errors.push('Al menos un carácter especial (!@#$%^&*...)');
+    }
+
+    return { valid: errors.length === 0, errors };
+  }
+
   private seedUsersIfEmpty(): void {
     const raw = localStorage.getItem(this.USERS_KEY);
     if (!raw) {
@@ -125,6 +234,11 @@ export class AuthService {
     try {
       const users = JSON.parse(raw) as RegisteredUser[];
       if (!Array.isArray(users) || users.length === 0) {
+        localStorage.setItem(this.USERS_KEY, JSON.stringify(AuthService.SEED_USERS));
+        return;
+      }
+      const needsMigration = users.some(u => !u.role || !u.nombre || u.activo === undefined);
+      if (needsMigration) {
         localStorage.setItem(this.USERS_KEY, JSON.stringify(AuthService.SEED_USERS));
       }
     } catch {

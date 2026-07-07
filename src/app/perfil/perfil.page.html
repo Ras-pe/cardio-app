@@ -8,18 +8,23 @@
 </ion-header>
 
 <ion-content>
-  <div class="profile-header">
-    <div class="avatar">
-      <ion-icon name="person-circle-outline"></ion-icon>
+  <div class="profile-hero">
+    <div class="hero-bg"></div>
+    <div class="avatar-ring">
+      <ion-icon name="person-circle-outline" class="avatar-icon"></ion-icon>
     </div>
     <h1>Bienvenido</h1>
-    <p>Tu información de sesión</p>
+    <p>Tu informacion de sesion</p>
   </div>
 
   <div class="cardio-card profile-card">
     <div class="profile-item">
-      <span class="profile-label">Correo electrónico</span>
+      <span class="profile-label">Correo electronico</span>
       <span class="profile-value">{{ userEmail }}</span>
+    </div>
+    <div class="profile-item">
+      <span class="profile-label">Rol</span>
+      <span class="profile-value">{{ getRoleLabel(userRole) }}</span>
     </div>
   </div>
 
@@ -32,9 +37,9 @@
       <ion-icon slot="start" name="home-outline"></ion-icon>
       Ir al Inicio
     </ion-button>
-    <ion-button expand="block" class="action-btn logout-btn" (click)="logout()" fill="outline" color="danger">
+    <ion-button expand="block" class="action-btn" (click)="logout()" fill="outline" color="danger">
       <ion-icon slot="start" name="log-out-outline"></ion-icon>
-      Cerrar Sesión
+      Cerrar Sesion
     </ion-button>
   </div>
 </ion-content>

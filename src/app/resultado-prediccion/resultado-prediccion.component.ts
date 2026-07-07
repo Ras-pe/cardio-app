@@ -67,6 +67,8 @@ export class ResultadoPrediccionComponent implements OnInit {
           : 'No especificado',
       troponinI: 0,
       confidence: Math.round(this.prediccion?.probability_risk || this.riskScore),
+      presionSistolica: this.evaluacion?.presion_arterial ?? 0,
+      presionDiastolica: this.evaluacion?.presion_diastolica ?? 0,
     };
 
     this.loadingRecommendation = true;

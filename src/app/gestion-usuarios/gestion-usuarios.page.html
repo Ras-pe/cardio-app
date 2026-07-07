@@ -1,0 +1,172 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Gestión de Usuarios</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="page-header">
+    <h1>Usuarios</h1>
+    <p>{{ users.length }} usuario(s) registrado(s)</p>
+  </div>
+
+  <div class="user-list">
+    <div class="user-card cardio-card" *ngFor="let user of users">
+      <div class="user-header">
+        <div class="user-info">
+          <ion-icon name="person-circle-outline" [color]="getRoleColor(user.role)"></ion-icon>
+          <div class="user-details">
+            <span class="user-name">{{ user.nombre }}</span>
+            <span class="user-email">{{ user.email }}</span>
+          </div>
+        </div>
+        <ion-badge [color]="getRoleColor(user.role)">{{ getRoleLabel(user.role) }}</ion-badge>
+      </div>
+
+      <div class="user-meta">
+        <span class="meta-item">
+          <ion-icon name="calendar-outline"></ion-icon>
+          {{ user.fechaCreacion }}
+        </span>
+        <span class="meta-item" [class.inactive]="!user.activo">
+          <ion-icon [name]="user.activo ? 'checkmark-circle-outline' : 'close-circle-outline'"></ion-icon>
+          {{ user.activo ? 'Activo' : 'Inactivo' }}
+        </span>
+        <span class="meta-item" *ngIf="isCurrentUser(user.email)">
+          <ion-icon name="star-outline"></ion-icon>
+          Tú
+        </span>
+      </div>
+
+      <div class="user-actions">
+        <ion-button fill="clear" size="small" (click)="openEditModal(user)">
+          <ion-icon slot="start" name="create-outline"></ion-icon>
+          Editar
+        </ion-button>
+        <ion-button fill="clear" size="small" [color]="user.activo ? 'warning' : 'success'" (click)="toggleActive(user)">
+          <ion-icon slot="start" [name]="user.activo ? 'pause-outline' : 'play-outline'"></ion-icon>
+          {{ user.activo ? 'Desactivar' : 'Activar' }}
+        </ion-button>
+        <ion-button fill="clear" size="small" color="danger" (click)="deleteUser(user)" *ngIf="!isCurrentUser(user.email)">
+          <ion-icon slot="start" name="trash-outline"></ion-icon>
+          Eliminar
+        </ion-button>
+      </div>
+    </div>
+  </div>
+
+  <div class="add-section">
+    <ion-button expand="block" (click)="openCreateForm()" *ngIf="!showCreateForm">
+      <ion-icon slot="start" name="person-add-outline"></ion-icon>
+      Crear Usuario
+    </ion-button>
+
+    <div class="create-form cardio-card" *ngIf="showCreateForm">
+      <h3>Nuevo Usuario</h3>
+
+      <div class="field-group">
+        <span class="field-label">Nombre completo</span>
+        <ion-item>
+          <ion-icon slot="start" name="person-outline" class="field-icon"></ion-icon>
+          <ion-input [(ngModel)]="formNombre" placeholder="Ej: Juan Pérez"></ion-input>
+        </ion-item>
+      </div>
+
+      <div class="field-group">
+        <span class="field-label">Correo electrónico</span>
+        <ion-item>
+          <ion-icon slot="start" name="mail-outline" class="field-icon"></ion-icon>
+          <ion-input type="email" [(ngModel)]="formEmail" placeholder="correo@ejemplo.com"></ion-input>
+        </ion-item>
+      </div>
+
+      <div class="field-group">
+        <span class="field-label">Contraseña</span>
+        <ion-item>
+          <ion-icon slot="start" name="lock-closed-outline" class="field-icon"></ion-icon>
+          <ion-input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="formPassword"
+            placeholder="Mín. 8 caracteres, mayús., núm., especial" (ionInput)="onPasswordChange()"></ion-input>
+          <ion-button fill="clear" slot="end" (click)="showPassword = !showPassword">
+            <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ion-item>
+        <div class="password-rules" *ngIf="formPassword">
+          <div class="rule" [class.valid]="pwHasLength">
+            <ion-icon [name]="pwHasLength ? 'checkmark-circle' : 'ellipse-outline'"></ion-icon>
+            Mínimo 8 caracteres
+          </div>
+          <div class="rule" [class.valid]="pwHasUpper">
+            <ion-icon [name]="pwHasUpper ? 'checkmark-circle' : 'ellipse-outline'"></ion-icon>
+            Una mayúscula
+          </div>
+          <div class="rule" [class.valid]="pwHasLower">
+            <ion-icon [name]="pwHasLower ? 'checkmark-circle' : 'ellipse-outline'"></ion-icon>
+            Una minúscula
+          </div>
+          <div class="rule" [class.valid]="pwHasDigit">
+            <ion-icon [name]="pwHasDigit ? 'checkmark-circle' : 'ellipse-outline'"></ion-icon>
+            Un número
+          </div>
+          <div class="rule" [class.valid]="pwHasSpecial">
+            <ion-icon [name]="pwHasSpecial ? 'checkmark-circle' : 'ellipse-outline'"></ion-icon>
+            Un carácter especial (!&#64;#$%^&amp;*...)
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <span class="field-label">Rol</span>
+        <ion-item>
+          <ion-icon slot="start" name="shield-outline" class="field-icon"></ion-icon>
+          <ion-select [(ngModel)]="formRole" placeholder="Seleccionar rol">
+            <ion-select-option value="user">Usuario</ion-select-option>
+            <ion-select-option value="admin">Administrador</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </div>
+
+      <div class="form-buttons">
+        <ion-button (click)="createUser()" [disabled]="!canSave">
+          <ion-icon slot="start" name="checkmark-outline"></ion-icon>
+          Crear
+        </ion-button>
+        <ion-button fill="outline" (click)="cancelCreate()">Cancelar</ion-button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div class="modal-overlay" *ngIf="showEditModal" (click)="cancelEdit()">
+    <div class="modal-card cardio-card" (click)="$event.stopPropagation()">
+      <h3>Editar Usuario</h3>
+
+      <div class="field-group">
+        <span class="field-label">Nombre</span>
+        <ion-item>
+          <ion-input [(ngModel)]="formNombre"></ion-input>
+        </ion-item>
+      </div>
+
+      <div class="field-group">
+        <span class="field-label">Rol</span>
+        <ion-item>
+          <ion-select [(ngModel)]="formRole">
+            <ion-select-option value="user">Usuario</ion-select-option>
+            <ion-select-option value="admin">Administrador</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </div>
+
+      <div class="form-buttons">
+        <ion-button (click)="saveEdit()" [disabled]="!canSaveEdit">
+          <ion-icon slot="start" name="save-outline"></ion-icon>
+          Guardar
+        </ion-button>
+        <ion-button fill="outline" (click)="cancelEdit()">Cancelar</ion-button>
+      </div>
+    </div>
+  </div>
+</ion-content>

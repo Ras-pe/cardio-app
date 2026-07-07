@@ -31,6 +31,8 @@ export interface RecommendationRequest {
   detectedRhythm: string;
   troponinI: number;
   confidence: number;
+  presionSistolica: number;
+  presionDiastolica: number;
 }
 
 export interface RecommendationResult {

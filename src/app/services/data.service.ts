@@ -16,6 +16,7 @@ export interface Evaluacion {
   edad: number;
   sexo: string;
   presion_arterial: number;
+  presion_diastolica: number;
   colesterol: number;
   fc_maxima: number;
   tipo_dolor_pecho: string;

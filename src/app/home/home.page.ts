@@ -11,6 +11,8 @@ import { ConfigService } from '../services/config.service';
 })
 export class HomePage implements ViewWillEnter {
   userEmail = '';
+  userRole = '';
+  isAdmin = false;
   testing = false;
 
   constructor(
@@ -22,6 +24,8 @@ export class HomePage implements ViewWillEnter {
 
   ionViewWillEnter(): void {
     this.userEmail = this.auth.getUserEmail();
+    this.userRole = this.auth.getUserRole();
+    this.isAdmin = this.auth.isAdmin();
   }
 
   async testConnection() {

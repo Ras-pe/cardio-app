@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './services/auth.guard';
+import { AdminGuard } from './services/admin.guard';
 
 const routes: Routes = [
   {
@@ -14,7 +15,8 @@ const routes: Routes = [
   },
   {
     path: 'register',
-    loadChildren: () => import('./register/register.module').then(m => m.RegisterPageModule)
+    redirectTo: 'gestion-usuarios',
+    pathMatch: 'full'
   },
   {
     path: 'home',
@@ -37,26 +39,6 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'productos',
-    loadChildren: () => import('./productos/productos.module').then(m => m.ProductosPageModule),
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'productos/nuevo',
-    loadChildren: () => import('./productos/producto-detail.module').then(m => m.ProductoDetailPageModule),
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'productos/:id',
-    loadChildren: () => import('./productos/producto-detail.module').then(m => m.ProductoDetailPageModule),
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'productos/:id/editar',
-    loadChildren: () => import('./productos/producto-detail.module').then(m => m.ProductoDetailPageModule),
-    canActivate: [AuthGuard]
-  },
-  {
     path: 'reportes',
     loadChildren: () => import('./reportes/reportes.module').then(m => m.ReportesPageModule),
     canActivate: [AuthGuard]
@@ -65,6 +47,11 @@ const routes: Routes = [
     path: 'configuracion',
     loadChildren: () => import('./configuracion/configuracion.module').then(m => m.ConfiguracionPageModule),
     canActivate: [AuthGuard]
+  },
+  {
+    path: 'gestion-usuarios',
+    loadChildren: () => import('./gestion-usuarios/gestion-usuarios.module').then(m => m.GestionUsuariosPageModule),
+    canActivate: [AuthGuard, AdminGuard]
   }
 ];
 

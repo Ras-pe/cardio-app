@@ -2,10 +2,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
-  padding-top: 16px;
+  gap: 20px;
+  padding: 8px 16px 24px;
 }
 
+// --- Gauge ---
 .gauge-section {
   display: flex;
   flex-direction: column;
@@ -15,13 +16,13 @@
 
 .gauge-ring {
   position: relative;
-  width: 160px;
-  height: 160px;
-}
+  width: 150px;
+  height: 150px;
 
-.gauge-ring svg {
-  width: 100%;
-  height: 100%;
+  svg {
+    width: 100%;
+    height: 100%;
+  }
 }
 
 .gauge-progress {
@@ -38,7 +39,7 @@
 }
 
 .gauge-value {
-  font-size: 28px;
+  font-size: 32px;
   font-weight: 700;
   color: var(--cardio-text);
   line-height: 1;
@@ -56,19 +57,22 @@
 }
 
 .risk-badge {
-  padding: 6px 24px;
+  padding: 6px 28px;
   border-radius: 20px;
-  font-weight: 600;
-  font-size: 16px;
+  font-weight: 700;
+  font-size: 15px;
   color: #fff;
+  letter-spacing: 0.3px;
 }
 
+// --- ML Details ---
 .ml-details {
   width: 100%;
-  background: var(--cardio-card-bg, #f8f9fa);
-  border-radius: 12px;
+  background: var(--cardio-card-bg);
+  border-radius: 14px;
   padding: 16px;
   border: 1px solid var(--cardio-border);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .server-info {
@@ -78,11 +82,11 @@
   padding-bottom: 10px;
   margin-bottom: 10px;
   border-bottom: 1px solid var(--cardio-border);
-}
 
-.server-info ion-icon {
-  font-size: 20px;
-  flex-shrink: 0;
+  ion-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+  }
 }
 
 .server-info-text {
@@ -119,11 +123,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 6px 0;
-}
+  padding: 8px 0;
 
-.detail-row + .detail-row {
-  border-top: 1px solid var(--cardio-border);
+  & + & {
+    border-top: 1px solid var(--cardio-border);
+  }
 }
 
 .detail-label {
@@ -137,35 +141,39 @@
   color: var(--cardio-text);
 }
 
+// --- Fallback ---
 .fallback-note {
   display: flex;
   align-items: center;
-  gap: 8px;
-  background: #f0f0f0;
-  border-radius: 8px;
-  padding: 10px 14px;
+  gap: 10px;
+  background: var(--cardio-bg);
+  border-radius: 10px;
+  padding: 12px 14px;
   font-size: 13px;
-  color: #666;
+  color: var(--cardio-text-light);
   width: 100%;
+  border: 1px solid var(--cardio-border);
+
+  .server-info-text {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .server-label {
+    font-size: 10px;
+    color: var(--cardio-text-light);
+    opacity: 0.7;
+  }
 }
 
-.fallback-note .server-info-text {
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.fallback-note .server-label {
-  font-size: 10px;
-  color: #999;
-}
-
+// --- Stats ---
 .stats-section {
   width: 100%;
 }
 
 .section-subtitle {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   color: var(--cardio-text);
   margin-bottom: 12px;
@@ -173,18 +181,19 @@
 }
 
 .stat-item {
-  background: var(--cardio-card-bg, #f8f9fa);
-  border-radius: 12px;
-  padding: 12px;
+  background: var(--cardio-card-bg);
+  border-radius: 14px;
+  padding: 14px 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
   border: 1px solid var(--cardio-border);
-}
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
 
-.stat-item ion-icon {
-  font-size: 22px;
+  ion-icon {
+    font-size: 22px;
+  }
 }
 
 .stat-value {
@@ -199,25 +208,27 @@
   text-align: center;
 }
 
+// --- Recommendation ---
 .recommendation-section {
   width: 100%;
 }
 
 .skeleton-card {
-  background: var(--cardio-card-bg, #f8f9fa);
-  border-radius: 12px;
+  background: var(--cardio-card-bg);
+  border-radius: 14px;
   padding: 16px;
   border: 1px solid var(--cardio-border);
 }
 
 .rec-card {
-  background: var(--cardio-card-bg, #f8f9fa);
-  border-radius: 12px;
-  padding: 16px;
-  border: 1px solid var(--ion-color-primary);
+  background: var(--cardio-card-bg);
+  border-radius: 14px;
+  padding: 18px;
+  border: 2px solid var(--ion-color-primary);
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
+  box-shadow: 0 2px 12px rgba(37, 99, 235, 0.08);
 }
 
 .rec-header {
@@ -225,46 +236,47 @@
   align-items: center;
   gap: 8px;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 15px;
   color: var(--cardio-text);
-}
 
-.rec-header ion-icon {
-  font-size: 20px;
+  ion-icon {
+    font-size: 22px;
+  }
 }
 
 .rec-text {
   font-size: 14px;
-  line-height: 1.5;
+  line-height: 1.6;
   color: var(--cardio-text);
   margin: 0;
 }
 
 .urgency-badge {
   align-self: flex-start;
-  padding: 4px 14px;
-  border-radius: 12px;
+  padding: 5px 16px;
+  border-radius: 14px;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
   color: #fff;
-}
+  letter-spacing: 0.3px;
 
-.urgency-badge.urgency-inmediata {
-  background: var(--ion-color-danger);
-}
+  &.urgency-inmediata {
+    background: var(--ion-color-danger);
+  }
 
-.urgency-badge.urgency-pocas-horas {
-  background: var(--ion-color-warning);
-  color: #000;
-}
+  &.urgency-pocas-horas {
+    background: var(--ion-color-warning);
+    color: #000;
+  }
 
-.urgency-badge.urgency-ambulatoria {
-  background: var(--ion-color-success);
+  &.urgency-ambulatoria {
+    background: var(--ion-color-success);
+  }
 }
 
 .rec-basis {
   font-size: 12px;
-  line-height: 1.4;
+  line-height: 1.5;
   color: var(--cardio-text-light);
   margin: 0;
   font-style: italic;
@@ -285,10 +297,10 @@
   font-size: 11px;
   color: var(--ion-color-primary);
   font-weight: 500;
-}
 
-.vault-tag ion-icon {
-  font-size: 14px;
+  ion-icon {
+    font-size: 14px;
+  }
 }
 
 .action-btn {
@@ -298,5 +310,5 @@
 
 .button-section {
   width: 100%;
-  padding-bottom: 16px;
+  padding-bottom: 8px;
 }

@@ -73,10 +73,6 @@ export class LoginPage implements OnInit, OnDestroy {
     await alert.present();
   }
 
-  goToRegister(): void {
-    this.router.navigate(['/register']);
-  }
-
   get emailControl() { return this.form.get('email'); }
   get passwordControl() { return this.form.get('password'); }
 }

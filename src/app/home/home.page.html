@@ -14,44 +14,45 @@
 </ion-header>
 
 <ion-content>
-  <div class="welcome-section">
-    <h1>Evaluación Cardiovascular</h1>
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <img src="assets/icon.png" alt="CardioApp Logo" class="app-logo" />
+    <h1>Evaluacion Cardiovascular</h1>
     <p>Bienvenido, {{ userEmail }}</p>
   </div>
 
-  <div class="section-title">Acciones</div>
-  <div class="action-buttons">
-    <ion-button expand="block" routerLink="/formulario" class="action-btn">
-      <ion-icon slot="start" name="clipboard-outline"></ion-icon>
-      Nueva Evaluación
-    </ion-button>
-    <ion-button expand="block" fill="outline" class="action-btn" routerLink="/historial">
-      <ion-icon slot="start" name="time-outline"></ion-icon>
-      Historial
-    </ion-button>
-    <ion-button expand="block" fill="outline" class="action-btn" routerLink="/productos">
-      <ion-icon slot="start" name="cube-outline"></ion-icon>
-      Productos
-    </ion-button>
-    <ion-button expand="block" fill="outline" class="action-btn" routerLink="/reportes">
-      <ion-icon slot="start" name="bar-chart-outline"></ion-icon>
-      Reportes
-    </ion-button>
-    <ion-button expand="block" fill="outline" class="action-btn" routerLink="/configuracion">
-      <ion-icon slot="start" name="settings-outline"></ion-icon>
-      Configuración
-    </ion-button>
-    <ion-button expand="block" fill="outline" color="tertiary" class="action-btn" (click)="testConnection()" [disabled]="testing">
-      <ion-icon slot="start" name="server-outline"></ion-icon>
-      {{ testing ? 'Probando...' : 'Probar Conexión al Servidor' }}
-    </ion-button>
+  <div class="actions-grid">
+    <div class="grid-item primary" routerLink="/formulario">
+      <ion-icon name="clipboard-outline"></ion-icon>
+      <span>Nueva Evaluacion</span>
+    </div>
+    <div class="grid-item" routerLink="/historial">
+      <ion-icon name="time-outline"></ion-icon>
+      <span>Historial</span>
+    </div>
+    <div class="grid-item" routerLink="/reportes">
+      <ion-icon name="bar-chart-outline"></ion-icon>
+      <span>Reportes</span>
+    </div>
+    <div class="grid-item" routerLink="/configuracion">
+      <ion-icon name="settings-outline"></ion-icon>
+      <span>Configuracion</span>
+    </div>
+    <div class="grid-item accent" routerLink="/gestion-usuarios" *ngIf="isAdmin">
+      <ion-icon name="people-outline"></ion-icon>
+      <span>Usuarios</span>
+    </div>
+    <div class="grid-item" (click)="testConnection()" [class.testing]="testing">
+      <ion-icon [name]="testing ? 'sync-outline' : 'server-outline'"></ion-icon>
+      <span>{{ testing ? 'Probando...' : 'Servidor' }}</span>
+    </div>
   </div>
 
   <div class="info-card cardio-card">
     <div class="info-header">
       <ion-icon name="information-circle-outline" color="primary"></ion-icon>
-      <span>¿Cómo se calcula?</span>
+      <span>Como se calcula?</span>
     </div>
-    <p>Esta evaluación usa un modelo de inteligencia artificial (Random Forest) entrenado con datos clínicos para estimar el riesgo de enfermedad cardíaca.</p>
+    <p>Esta evaluacion usa un modelo de inteligencia artificial (Random Forest) entrenado con datos clinicos para estimar el riesgo de enfermedad cardiaca.</p>
   </div>
 </ion-content>

@@ -1,0 +1,239 @@
+// ============================================
+// Shared SCSS - CardioApp Mobile-First Design
+// ============================================
+
+// --- Status Colors (reusable tokens) ---
+$color-success-bg: #d1fae5;
+$color-success-text: #059669;
+$color-danger-bg: #fee2e2;
+$color-danger-text: #dc2626;
+$color-warning-bg: #fef3c7;
+$color-warning-text: #d97706;
+$color-info-bg: #e0e7ff;
+$color-info-text: #4338ca;
+
+// --- Section Header ---
+.page-header {
+  padding: env(safe-area-inset-top, 20px) 20px 8px;
+
+  h1 {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--cardio-text);
+    margin: 0 0 4px;
+    letter-spacing: -0.3px;
+  }
+
+  p {
+    font-size: 14px;
+    color: var(--cardio-text-light);
+    margin: 0;
+  }
+}
+
+// --- Form Fields ---
+.field-group {
+  margin-bottom: 16px;
+
+  .field-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--cardio-text);
+    margin-bottom: 6px;
+    padding: 0 4px;
+  }
+
+  .field-hint {
+    font-size: 11px;
+    color: var(--cardio-text-light);
+    margin: 2px 0 0 4px;
+    line-height: 1.4;
+  }
+}
+
+.field-item {
+  --background: var(--cardio-card-bg);
+  --border-radius: 12px;
+  --border-color: var(--cardio-border);
+  --border-style: solid;
+  --border-width: 1px;
+  --padding-start: 14px;
+  --padding-end: 14px;
+  --inner-padding-end: 0;
+  --min-height: 50px;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &.item-has-focus {
+    --border-color: var(--ion-color-primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+
+  &.field-error {
+    --border-color: var(--ion-color-danger);
+  }
+
+  ion-input,
+  ion-select,
+  ion-textarea {
+    font-size: 15px;
+    --padding-start: 0;
+  }
+}
+
+// --- Validation Messages ---
+.validation-msg {
+  display: block;
+  font-size: 12px;
+  margin: 4px 0 0 4px;
+  line-height: 1.4;
+}
+
+// --- Form Buttons ---
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+
+  ion-button {
+    flex: 1;
+    --border-radius: 12px;
+    height: 48px;
+    font-weight: 600;
+    font-size: 15px;
+    text-transform: none;
+  }
+}
+
+// --- Primary Action Button (full-width) ---
+.btn-primary {
+  --border-radius: 14px;
+  height: 52px;
+  font-weight: 600;
+  font-size: 16px;
+  text-transform: none;
+  letter-spacing: 0.2px;
+}
+
+.btn-spinner {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+}
+
+// --- Empty State ---
+.empty-state {
+  text-align: center;
+  padding: 64px 24px;
+
+  ion-icon {
+    font-size: 64px;
+    color: var(--cardio-text-light);
+    opacity: 0.35;
+    margin-bottom: 4px;
+  }
+
+  h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--cardio-text);
+    margin: 12px 0 6px;
+  }
+
+  p {
+    font-size: 14px;
+    color: var(--cardio-text-light);
+    margin: 0 0 24px;
+    line-height: 1.5;
+  }
+}
+
+// --- Loading State ---
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px;
+  gap: 16px;
+
+  ion-spinner {
+    width: 36px;
+    height: 36px;
+  }
+
+  p {
+    font-size: 14px;
+    color: var(--cardio-text-light);
+    margin: 0;
+  }
+}
+
+// --- Status Badges ---
+.badge-success {
+  background: $color-success-bg;
+  color: $color-success-text;
+}
+
+.badge-danger {
+  background: $color-danger-bg;
+  color: $color-danger-text;
+}
+
+.badge-warning {
+  background: $color-warning-bg;
+  color: $color-warning-text;
+}
+
+.badge-info {
+  background: $color-info-bg;
+  color: $color-info-text;
+}
+
+// --- Info Card ---
+.info-card {
+  margin: 0 16px 24px;
+  padding: 16px;
+
+  .info-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--cardio-text);
+    margin-bottom: 8px;
+  }
+
+  p {
+    font-size: 13px;
+    color: var(--cardio-text-light);
+    line-height: 1.5;
+    margin: 0;
+  }
+}
+
+// --- Mobile-optimized ion-item override ---
+ion-item {
+  --background: var(--cardio-card-bg);
+  --border-radius: 12px;
+  --border-color: var(--cardio-border);
+  --border-style: solid;
+  --border-width: 1px;
+  --padding-start: 14px;
+  --padding-end: 14px;
+  --inner-padding-end: 0;
+  --min-height: 50px;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+ion-input,
+ion-select,
+ion-textarea {
+  font-size: 15px;
+}
