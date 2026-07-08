@@ -13,6 +13,17 @@
     <p>Resultados del modelo ML y estimaciones locales</p>
   </div>
 
+  <div class="export-actions" *ngIf="reportes.length > 0">
+    <ion-button (click)="exportCSV()" fill="outline" class="export-btn">
+      <ion-icon slot="start" name="document-text-outline"></ion-icon>
+      Exportar CSV
+    </ion-button>
+    <ion-button (click)="exportJSON()" fill="outline" class="export-btn">
+      <ion-icon slot="start" name="code-outline"></ion-icon>
+      Exportar JSON
+    </ion-button>
+  </div>
+
   <div class="reportes-list" *ngIf="reportes.length > 0">
     <div class="reporte-card cardio-card" *ngFor="let r of reportes">
       <div class="reporte-top">
@@ -38,8 +49,8 @@
         <span class="risk-badge" [style.background]="riskColor(r.risk_level)">
           {{ r.risk_level }} ({{ r.probability_risk }}%)
         </span>
-        <span class="source-badge" [class.ml]="r.source === 'ML'" [class.local]="r.source === 'local'">
-          {{ r.source }}
+        <span class="source-badge" [class.ml]="r.source === 'ML'" [class.local]="r.source === 'local'" [class.failed]="r.source === 'failed'">
+          {{ r.source === 'failed' ? 'Fallo ML' : r.source }}
         </span>
       </div>
     </div>

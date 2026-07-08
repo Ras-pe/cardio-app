@@ -34,16 +34,21 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "buildOptimizer": true
+            },
+            "development": {
+              "optimization": false,
+              "sourceMap": true,
+              "namedChunks": true,
+              "buildOptimizer": false
             }
           }
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "buildTarget": "app:build"
+            "buildTarget": "app:build:development"
           },
           "configurations": {
             "production": { "buildTarget": "app:build:production" }
@@ -65,7 +70,6 @@
       }
     }
   },
-  "defaultProject": "app",
   "cli": {
     "analytics": "fc8c6c66-9a08-438a-8397-1bac4e5ac395"
   }

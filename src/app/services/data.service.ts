@@ -38,7 +38,7 @@ export interface PrediccionReport {
   probability_risk: number;
   probability_no_risk: number;
   risk_level: string;
-  source: 'ML' | 'local';
+  source: 'ML' | 'local' | 'failed';
 }
 
 @Injectable({

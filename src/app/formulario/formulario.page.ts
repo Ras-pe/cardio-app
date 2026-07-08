@@ -251,7 +251,7 @@ export class FormularioPage implements OnInit {
       probability_no_risk: 100 - riskScore,
       risk_level: riskLevel,
     };
-    this.guardarPrediccion(evaluacion, fallbackResult as any, 'local');
+    this.guardarPrediccion(evaluacion, fallbackResult as any, 'failed');
 
     const modal = await this.modalCtrl.create({
       component: ResultadoPrediccionComponent,
@@ -268,7 +268,7 @@ export class FormularioPage implements OnInit {
     await modal.onDidDismiss();
   }
 
-  private guardarPrediccion(evaluacion: any, result: PredictionResult, source: 'ML' | 'local') {
+  private guardarPrediccion(evaluacion: any, result: PredictionResult, source: 'ML' | 'local' | 'failed') {
     this.dataService.addPrediccion({
       evaluacionId: evaluacion.id,
       fecha: evaluacion.fecha,
