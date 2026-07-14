@@ -18,6 +18,7 @@
 
 .export-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   padding: 0 16px 16px;
 
@@ -26,6 +27,8 @@
     font-size: 13px;
     font-weight: 600;
     --color: var(--ion-color-primary);
+    flex: 1 1 auto;
+    min-width: 140px;
   }
 }
 
