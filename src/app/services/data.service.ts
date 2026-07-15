@@ -191,6 +191,41 @@ export class DataService {
     return report;
   }
 
+  exportarCSV(reportes: PrediccionReport[]): string {
+    const headers = [
+      'ID', 'Fecha', 'Paciente', 'Telefono', 'Prediccion', 'Label',
+      'Prob_Riesgo', 'Prob_Sin_Riesgo', 'Nivel_Riesgo', 'Fuente'
+    ];
+    const rows = reportes.map(r => [
+      r.id,
+      r.fecha,
+      `"${(r.paciente || '').replace(/"/g, '""')}"`,
+      `"${(r.telefono || '').replace(/"/g, '""')}"`,
+      r.prediction,
+      `"${r.label}"`,
+      r.probability_risk,
+      r.probability_no_risk,
+      `"${r.risk_level}"`,
+      r.source
+    ]);
+    return [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+  }
+
+  exportarJSON(reportes: PrediccionReport[]): string {
+    return JSON.stringify(reportes.map(r => ({
+      id: r.id,
+      fecha: r.fecha,
+      paciente: r.paciente,
+      telefono: r.telefono || '',
+      prediccion: r.prediction,
+      label: r.label,
+      probabilidad_riesgo: r.probability_risk,
+      probabilidad_sin_riesgo: r.probability_no_risk,
+      nivel_riesgo: r.risk_level,
+      fuente: r.source
+    })), null, 2);
+  }
+
   addEvaluacion(data: Omit<Evaluacion, 'id' | 'fecha'>): Evaluacion {
     const nextId = this.evaluaciones.length > 0
       ? Math.max(...this.evaluaciones.map(e => e.id)) + 1

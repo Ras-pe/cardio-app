@@ -16,19 +16,35 @@
   }
 }
 
-.export-actions {
+.exportar-botones {
   display: flex;
-  flex-wrap: wrap;
   gap: 10px;
-  padding: 0 16px 16px;
+  padding: 0 16px 12px;
 
-  .export-btn {
-    --border-radius: 12px;
+  .btn-exportar {
+    --border-radius: 10px;
     font-size: 13px;
     font-weight: 600;
-    --color: var(--ion-color-primary);
-    flex: 1 1 auto;
-    min-width: 140px;
+    text-transform: none;
+    height: 36px;
+
+    &.btn-csv {
+      --border-color: #059669;
+      --color: #059669;
+
+      &:hover {
+        background: #d1fae5;
+      }
+    }
+
+    &.btn-json {
+      --border-color: #4338ca;
+      --color: #4338ca;
+
+      &:hover {
+        background: #e0e7ff;
+      }
+    }
   }
 }
 

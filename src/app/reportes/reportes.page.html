@@ -13,14 +13,14 @@
     <p>Resultados del modelo ML y estimaciones locales</p>
   </div>
 
-  <div class="export-actions" *ngIf="reportes.length > 0">
-    <ion-button (click)="exportCSV()" fill="outline" class="export-btn">
-      <ion-icon slot="start" name="document-text-outline"></ion-icon>
-      Exportar CSV
+  <div class="exportar-botones" *ngIf="reportes.length > 0">
+    <ion-button fill="outline" class="btn-exportar btn-csv" (click)="descargarCSV()">
+      <ion-icon name="download-outline" slot="start"></ion-icon>
+      CSV
     </ion-button>
-    <ion-button (click)="exportJSON()" fill="outline" class="export-btn">
-      <ion-icon slot="start" name="code-outline"></ion-icon>
-      Exportar JSON
+    <ion-button fill="outline" class="btn-exportar btn-json" (click)="descargarJSON()">
+      <ion-icon name="code-outline" slot="start"></ion-icon>
+      JSON
     </ion-button>
   </div>
 
